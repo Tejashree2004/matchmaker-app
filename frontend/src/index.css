@@ -1,0 +1,720 @@
+
+/* ================= GLOBAL ================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff4b6e, #ff758c);
+  overflow-x: hidden;
+}
+
+/* ================= ROOT LAYOUT (PERFECT CENTER) ================= */
+.container,
+.chat-onboard,
+.splash-container,
+.onboard {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+  flex-direction: column;
+
+  padding: 16px;
+  text-align: center;
+
+  position: relative;
+  z-index: 1;
+}
+
+/* ================= CARD SYSTEM ================= */
+.card {
+  width: 90%;
+  max-width: 380px;
+
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+
+  border-radius: 22px;
+  padding: 22px;
+
+  color: black;
+  text-align: center;
+
+  box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 12px;
+}
+
+/* ================= INPUT ================= */
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
+  transition: 0.25s;
+}
+
+.input:focus {
+  border-color: #ff4b6e;
+  box-shadow: 0 0 10px rgba(255, 75, 110, 0.25);
+}
+
+/* ================= BUTTON ================= */
+.btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+
+  border-radius: 14px;
+  border: none;
+
+  background: linear-gradient(135deg, #ff4b6e, #ff758c);
+  color: white;
+
+  font-weight: bold;
+  font-size: 15px;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  opacity: 0.95;
+}
+
+/* ================= SPLASH SCREEN ================= */
+/* ================= SPLASH SCREEN (NEW PREMIUM DESIGN) ================= */
+
+.splash {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  overflow: hidden;
+
+  text-align: center;
+  color: white;
+}
+
+.splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: url("https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+
+  transform: scale(1.1);
+
+  /* base cinematic look */
+  filter: brightness(0.55) contrast(1.1) saturate(1.2);
+  z-index: 0;
+}
+
+/* 💗 EXTRA PINK TINT LAYER */
+.splash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* stronger pink romantic overlay */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 75, 110, 0.45),
+    rgba(255, 20, 147, 0.25)
+  );
+
+  mix-blend-mode: screen; /* 💥 makes image glow pink */
+  z-index: 1;
+}
+
+/* ================= GLASS CARD ================= */
+.splash-card {
+  position: relative;
+  z-index: 2;
+
+  width: 88%;
+  max-width: 370px;
+
+  padding: 28px;
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  animation: popIn 0.8s ease;
+}
+
+/* entry animation */
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ================= IMAGE ================= */
+.splash-img {
+  width: 115px;
+  height: 115px;
+  object-fit: contain;
+
+  filter: drop-shadow(0 12px 20px rgba(0,0,0,0.4));
+
+  animation: floatHeart 2.5s ease-in-out infinite;
+}
+
+@keyframes floatHeart {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.08); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* ================= TEXT ================= */
+.splash-card h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.splash-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ================= FLOATING HEARTS ================= */
+.hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  bottom: -50px;
+  font-size: 18px;
+  opacity: 0.7;
+
+  animation: floatUp 7s linear infinite;
+}
+
+/* random positioning */
+.heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+.heart:nth-child(2) { left: 25%; animation-delay: 1s; font-size: 16px; }
+.heart:nth-child(3) { left: 40%; animation-delay: 2s; font-size: 20px; }
+.heart:nth-child(4) { left: 60%; animation-delay: 3s; }
+.heart:nth-child(5) { left: 75%; animation-delay: 4s; }
+.heart:nth-child(6) { left: 90%; animation-delay: 5s; }
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ================= LOADER ================= */
+.loader {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.loader span {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loader span:nth-child(2) { animation-delay: 0.2s; }
+.loader span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  to {
+    transform: translateY(-8px);
+    opacity: 0.5;
+  }
+}
+
+/* ================= BIG HEART IMAGE ================= */
+.love-img {
+  width: 85px;
+  height: 85px;
+  margin: 18px auto;
+  display: block;
+
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(255, 75, 110, 0.3));
+
+  animation: floatHeart 2.5s ease-in-out infinite;
+}
+
+@keyframes floatHeart {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.06); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* ================= FLOATING HEART BACKGROUND ================= */
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.heart {
+  position: absolute;
+  bottom: -60px;
+  font-size: 20px;
+  opacity: 0.6;
+  animation: floatUp 7s linear infinite;
+}
+
+/* spread hearts */
+.heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+.heart:nth-child(2) { left: 20%; animation-delay: 1s; font-size: 18px; }
+.heart:nth-child(3) { left: 35%; animation-delay: 2s; font-size: 22px; }
+.heart:nth-child(4) { left: 50%; animation-delay: 3s; }
+.heart:nth-child(5) { left: 65%; animation-delay: 4s; font-size: 18px; }
+.heart:nth-child(6) { left: 80%; animation-delay: 5s; }
+.heart:nth-child(7) { left: 90%; animation-delay: 6s; font-size: 24px; }
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% { opacity: 0.8; }
+  100% {
+    transform: translateY(-110vh) scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* ================= LOADER ================= */
+.loader {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.loader span {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loader span:nth-child(2) { animation-delay: 0.2s; }
+.loader span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  to {
+    transform: translateY(-8px);
+    opacity: 0.5;
+  }
+}
+
+/* ================= CHAT ONBOARD ================= */
+.chat-onboard {
+  background: linear-gradient(135deg, #ff4b6e, #ff758c);
+}
+
+.sub {
+  opacity: 0.9;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* chat box */
+.chat-box {
+  width: 100%;
+  max-width: 340px;
+
+  background: white;
+  border-radius: 22px;
+  padding: 15px;
+
+  color: black;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  margin-bottom: 20px;
+}
+
+/* messages */
+.msg {
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 15px;
+  max-width: 75%;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.left {
+  background: #f1f1f1;
+  align-self: flex-start;
+}
+
+.right {
+  background: #ff4b6e;
+  color: white;
+  margin-left: auto;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (min-width: 768px) {
+  .card {
+    max-width: 420px;
+    padding: 26px;
+  }
+
+  .logo {
+    font-size: 2.6rem;
+  }
+
+  .chat-box {
+    max-width: 400px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    max-width: 450px;
+  }
+
+  .logo {
+    font-size: 3rem;
+  }
+
+  .btn {
+    font-size: 16px;
+  }
+
+  .chat-box {
+    max-width: 420px;
+  }
+}
+
+.password-box {
+  position: relative;
+  width: 100%;
+}
+
+.password-box input {
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.guest-text {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+}
+
+.guest-text:hover {
+  color: #ff4b6e;
+}
+.profile-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ff4b6e, #ff758c);
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* MAIN CARD */
+.profile-card {
+  width: 100%;
+  max-width: 420px;
+
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+
+  border: 1.5px solid rgba(255, 255, 255, 0.35); /* FIXED VISIBILITY */
+  border-radius: 20px;
+
+  padding: 24px;
+  color: white;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+/* QUOTE */
+.quote {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 18px;
+}
+
+/* PHOTO SECTION */
+.photo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.photo-circle {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.photo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empty-circle {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* PLUS BUTTON */
+.plus-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+
+  background: #ff4d8d;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+/* INPUTS */
+input,
+textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+
+  border-radius: 12px;
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+
+  color: white;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* TEXTAREA */
+.textarea {
+  height: 80px;
+  resize: none;
+}
+
+/* ================= PREF BOX ================= */
+.pref-box {
+  margin-top: 12px;
+  padding: 10px;
+
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pref-box h4 {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+
+.pref-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pref {
+  font-size: 11px;
+  padding: 6px 10px;
+
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.pref:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.pref.active {
+  border: 1.5px solid rgba(255, 77, 141, 0.7);
+  background: rgba(255, 77, 141, 0.12);
+  color: #ff9ab8;
+}
+
+/* ================= CHIPS ================= */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.chip {
+  font-size: 12px;
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.chip:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.chip.active {
+  background: rgba(255, 77, 141, 0.1);
+  border: 1.5px solid rgba(255, 77, 141, 0.7);
+  color: #ff9ab8;
+}
+
+/* BUTTON ROW */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-row button {
+  flex: 1;
+}
+
+/* HELP TEXT */
+.hint {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 15px;
+}
+
+.sub-title-small {
+  font-size: 14px;
+  margin-top: 15px;
+  opacity: 0.8;
+}
+.login-card input::placeholder,
+.signup-card input::placeholder {
+  color: rgba(0, 0, 0, 0.65); /* dark grey readable */
+}
+.login-card input,
+.signup-card input {
+  color: #111 !important;   /* black text */
+}
+/* 🔥 AUTH INPUT FIX (OTP / LOGIN / SIGNUP TEXT BLACK) */
+.auth-input input {
+  color: #111 !important;
+  -webkit-text-fill-color: #111 !important;
+  caret-color: #111;
+}
+
+.auth-input input::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
