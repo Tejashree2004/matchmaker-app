@@ -116,3 +116,4 @@ C:\Users\sonav\OneDrive\Desktop\MatchMaker\backend\obj\Debug\net8.0\refint\backe
 C:\Users\sonav\OneDrive\Desktop\MatchMaker\backend\obj\Debug\net8.0\backend.pdb
 C:\Users\sonav\OneDrive\Desktop\MatchMaker\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\sonav\OneDrive\Desktop\MatchMaker\backend\obj\Debug\net8.0\ref\backend.dll
+C:\Users\sonav\OneDrive\Desktop\MatchMaker\backend\obj\Debug\net8.0\backend.sourcelink.json

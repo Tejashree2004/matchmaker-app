@@ -485,39 +485,41 @@ html, body {
   font-family: "Poppins", sans-serif;
 }
 
-/* MAIN CARD */
+/* ================= MAIN CARD (LOGIN STYLE) ================= */
 .profile-card {
   width: 100%;
   max-width: 420px;
 
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
 
-  border: 1.5px solid rgba(255, 255, 255, 0.35); /* FIXED VISIBILITY */
+  border: 1px solid rgba(255, 75, 110, 0.25);
+
   border-radius: 20px;
-
   padding: 24px;
-  color: white;
 
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  color: #111;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
 }
 
-/* TITLE */
+/* ================= TEXT ================= */
 .title {
   text-align: center;
   font-size: 22px;
   margin-bottom: 6px;
+  color: #111;
 }
 
-/* QUOTE */
 .quote {
   text-align: center;
   font-size: 12px;
-  opacity: 0.65;
+  opacity: 0.7;
   margin-bottom: 18px;
+  color: #444;
 }
 
-/* PHOTO SECTION */
+/* ================= PHOTO ================= */
 .photo-section {
   display: flex;
   justify-content: center;
@@ -532,8 +534,8 @@ html, body {
   overflow: hidden;
   cursor: pointer;
 
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 75, 110, 0.25);
+  background: #fff;
 }
 
 .photo-circle img {
@@ -545,10 +547,10 @@ html, body {
 .empty-circle {
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.06);
+  background: #f5f5f5;
 }
 
-/* PLUS BUTTON */
+/* ================= + BUTTON ================= */
 .plus-badge {
   position: absolute;
   bottom: 6px;
@@ -566,10 +568,10 @@ html, body {
   align-items: center;
 
   font-weight: bold;
-  border: 2px solid rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(0,0,0,0.2);
 }
 
-/* INPUTS */
+/* ================= INPUTS ================= */
 input,
 textarea {
   width: 100%;
@@ -579,18 +581,17 @@ textarea {
   border-radius: 12px;
   outline: none;
 
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: #fff;
+  border: 1px solid #ddd;
 
-  color: white;
+  color: #111;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(0, 0, 0, 0.45);
 }
 
-/* TEXTAREA */
 .textarea {
   height: 80px;
   resize: none;
@@ -602,14 +603,14 @@ textarea::placeholder {
   padding: 10px;
 
   border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 75, 110, 0.2);
+  background: #fff;
 }
 
 .pref-box h4 {
   font-size: 13px;
-  opacity: 0.75;
   margin-bottom: 8px;
+  color: #111;
 }
 
 .pref-options {
@@ -618,29 +619,29 @@ textarea::placeholder {
   gap: 8px;
 }
 
+/* ================= PREF ================= */
 .pref {
   font-size: 11px;
   padding: 6px 10px;
 
   border-radius: 15px;
 
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: #fff;
+  border: 1px solid rgba(255, 75, 110, 0.25);
 
-  color: rgba(255, 255, 255, 0.7);
+  color: #333;
   cursor: pointer;
-
   transition: 0.2s;
 }
 
 .pref:hover {
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: #ff4b6e;
 }
 
 .pref.active {
-  border: 1.5px solid rgba(255, 77, 141, 0.7);
-  background: rgba(255, 77, 141, 0.12);
-  color: #ff9ab8;
+  background: rgba(255, 75, 110, 0.12);
+  border: 1px solid #ff4b6e;
+  color: #ff4b6e;
 }
 
 /* ================= CHIPS ================= */
@@ -657,26 +658,25 @@ textarea::placeholder {
 
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: #fff;
+  border: 1px solid rgba(255, 75, 110, 0.25);
 
-  color: rgba(255, 255, 255, 0.7);
+  color: #333;
   cursor: pointer;
-
   transition: 0.2s;
 }
 
 .chip:hover {
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: #ff4b6e;
 }
 
 .chip.active {
-  background: rgba(255, 77, 141, 0.1);
-  border: 1.5px solid rgba(255, 77, 141, 0.7);
-  color: #ff9ab8;
+  background: rgba(255, 75, 110, 0.12);
+  border: 1px solid #ff4b6e;
+  color: #ff4b6e;
 }
 
-/* BUTTON ROW */
+/* ================= BUTTON ROW ================= */
 .btn-row {
   display: flex;
   gap: 12px;
@@ -687,34 +687,25 @@ textarea::placeholder {
   flex: 1;
 }
 
-/* HELP TEXT */
+/* ================= HELP TEXT ================= */
 .hint {
   text-align: center;
   font-size: 12px;
-  opacity: 0.6;
+  opacity: 0.7;
   margin-bottom: 15px;
 }
 
-.sub-title-small {
-  font-size: 14px;
-  margin-top: 15px;
-  opacity: 0.8;
-}
-.login-card input::placeholder,
-.signup-card input::placeholder {
-  color: rgba(0, 0, 0, 0.65); /* dark grey readable */
-}
+/* ================= AUTH FIX (LOGIN/SIGNUP/OTP TEXT BLACK) ================= */
 .login-card input,
-.signup-card input {
-  color: #111 !important;   /* black text */
-}
-/* 🔥 AUTH INPUT FIX (OTP / LOGIN / SIGNUP TEXT BLACK) */
+.signup-card input,
 .auth-input input {
   color: #111 !important;
   -webkit-text-fill-color: #111 !important;
   caret-color: #111;
 }
 
+.login-card input::placeholder,
+.signup-card input::placeholder,
 .auth-input input::placeholder {
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(0, 0, 0, 0.45) !important;
 }
