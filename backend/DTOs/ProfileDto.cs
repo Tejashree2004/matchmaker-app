@@ -1,21 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace backend.Models
+namespace backend.DTOs
 {
-    public class User
+    public class ProfileDto
     {
-        public int Id { get; set; }
-
-        // AUTH
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
-        public bool IsVerified { get; set; }
-
-        public string? Otp { get; set; }
-
-        // PROFILE
         public string? Name { get; set; }
 
         public int? Age { get; set; }
@@ -35,7 +21,5 @@ namespace backend.Models
         public string? Interests { get; set; }
 
         public string? PhotoUrl { get; set; }
-
-        public bool ProfileCompleted { get; set; } = false;
     }
 }

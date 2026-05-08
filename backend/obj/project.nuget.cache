@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "t2buO0ZwCzc=",
+  "dgSpecHash": "PsF6yONnzEY=",
   "success": true,
   "projectFilePath": "C:\\Users\\sonav\\OneDrive\\Desktop\\MatchMaker\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sonav\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\mailkit\\4.16.0\\mailkit.4.16.0.nupkg.sha512",
+    "C:\\Users\\sonav\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.24\\microsoft.aspnetcore.openapi.8.0.24.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
@@ -34,6 +35,8 @@
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.0.0\\microsoft.identitymodel.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.0.0\\microsoft.identitymodel.jsonwebtokens.8.0.0.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.logging\\8.0.0\\microsoft.identitymodel.logging.8.0.0.nupkg.sha512",
+    "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.protocols\\7.0.3\\microsoft.identitymodel.protocols.7.0.3.nupkg.sha512",
+    "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.0.3\\microsoft.identitymodel.protocols.openidconnect.7.0.3.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.0.0\\microsoft.identitymodel.tokens.8.0.0.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
     "C:\\Users\\sonav\\.nuget\\packages\\mimekit\\4.16.0\\mimekit.4.16.0.nupkg.sha512",

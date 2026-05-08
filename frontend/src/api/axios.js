@@ -2,7 +2,7 @@ import axios from "axios";
 
 // ================= BASE CONFIG ================= //
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5240/api", // ✅ backend port
+  baseURL: "http://localhost:5240/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,17 +13,32 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     try {
+      // ✅ get token from localStorage
       const token =
         localStorage.getItem("jwtToken") ||
         localStorage.getItem("token") ||
         localStorage.getItem("accessToken");
 
-      // 🔒 attach token only if valid
-      if (token && token !== "null" && token !== "undefined") {
+      console.log("🔑 TOKEN:", token);
+
+      // ✅ attach token
+      if (
+        token &&
+        token !== "null" &&
+        token !== "undefined"
+      ) {
         config.headers.Authorization = `Bearer ${token}`;
       } else {
         delete config.headers.Authorization;
       }
+
+      console.log("📡 REQUEST:", {
+        url: config.url,
+        method: config.method,
+        headers: config.headers,
+        data: config.data,
+      });
+
     } catch (err) {
       console.error("❌ Token error:", err);
     }
@@ -35,10 +50,25 @@ axiosInstance.interceptors.request.use(
 
 // ================= RESPONSE INTERCEPTOR ================= //
 axiosInstance.interceptors.response.use(
-  (response) => response.data, // ✅ IMPORTANT FIX (direct data return)
+  (response) => {
+    console.log("✅ RESPONSE:", response.data);
+
+    // IMPORTANT
+    return response.data;
+  },
 
   (error) => {
     console.error("🔥 API ERROR FULL:", error);
+
+    // ✅ SHOW FULL BACKEND ERROR
+    console.log("❌ STATUS:", error.response?.status);
+
+    console.log("❌ BACKEND DATA:", error.response?.data);
+
+    console.log(
+      "❌ VALIDATION ERRORS:",
+      error.response?.data?.errors
+    );
 
     // ⏰ TIMEOUT
     if (error.code === "ECONNABORTED") {
@@ -50,28 +80,37 @@ axiosInstance.interceptors.response.use(
 
     const status = error.response?.status;
 
-    const message =
+    // ✅ BETTER ERROR MESSAGE
+    let message =
       error.response?.data?.message ||
       error.response?.data?.title ||
       error.message ||
       "Something went wrong";
 
-    // ================= ERROR HANDLING ================= //
+    // ✅ ASP.NET VALIDATION ERROR SUPPORT
+    if (error.response?.data?.errors) {
+      const validationErrors =
+        Object.values(error.response.data.errors)
+          .flat()
+          .join(", ");
 
+      message = validationErrors;
+    }
+
+    // ================= AUTH ERROR ================= //
     if (status === 401) {
-      const isGuest = localStorage.getItem("userType") === "guest";
+      console.log("⛔ Unauthorized");
 
-      if (!isGuest) {
-        localStorage.removeItem("jwtToken");
-        localStorage.removeItem("token");
-        localStorage.removeItem("accessToken");
+      localStorage.removeItem("jwtToken");
+      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
 
-        if (!window.location.pathname.includes("/login")) {
-          window.location.href = "/login";
-        }
+      if (!window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
       }
     }
 
+    // ================= FORBIDDEN ================= //
     if (status === 403) {
       alert("Access denied.");
     }
