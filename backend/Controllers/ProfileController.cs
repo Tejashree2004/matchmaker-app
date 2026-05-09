@@ -18,13 +18,20 @@ namespace backend.Controllers
             _context = context;
         }
 
+        // ================= GET CURRENT USER EMAIL =================
+        private string? GetUserEmail()
+        {
+            return User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value
+                ?? User.FindFirst("email")?.Value;
+        }
+
         // ================= SAVE PROFILE =================
         [HttpPost("save-profile")]
         public async Task<IActionResult> SaveProfile([FromBody] ProfileDto dto)
         {
             try
             {
-                var email = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+                var email = GetUserEmail();
 
                 if (string.IsNullOrEmpty(email))
                     return BadRequest("Invalid user token");
@@ -34,7 +41,7 @@ namespace backend.Controllers
                 if (user == null)
                     return NotFound("User not found");
 
-                // Update safely (avoid overwriting with null)
+                // UPDATE PROFILE
                 user.Name = dto.Name ?? user.Name;
                 user.Age = dto.Age ?? user.Age;
                 user.Location = dto.Location ?? user.Location;
@@ -45,6 +52,7 @@ namespace backend.Controllers
 
                 user.Personality = dto.Personality ?? user.Personality;
                 user.Vibe = dto.Vibe ?? user.Vibe;
+                user.Language = dto.Language ?? user.Language;
 
                 user.Interests = dto.Interests ?? user.Interests;
                 user.PhotoUrl = dto.PhotoUrl ?? user.PhotoUrl;
@@ -70,7 +78,7 @@ namespace backend.Controllers
         {
             try
             {
-                var email = User.FindFirst("email")?.Value;
+                var email = GetUserEmail();
 
                 if (string.IsNullOrEmpty(email))
                     return BadRequest("Invalid user token");
@@ -80,21 +88,21 @@ namespace backend.Controllers
                 if (user == null)
                     return NotFound("User not found");
 
-                var result = new ProfileDto
+                return Ok(new
                 {
-                    Name = user.Name,
-                    Age = user.Age,
-                    Location = user.Location,
-                    Bio = user.Bio,
-                    Gender = user.Gender,
-                    LookingFor = user.LookingFor,
-                    Personality = user.Personality,
-                    Vibe = user.Vibe,
-                    Interests = user.Interests,
-                    PhotoUrl = user.PhotoUrl
-                };
-
-                return Ok(result);
+                    id = user.Id,
+                    name = user.Name,
+                    age = user.Age,
+                    location = user.Location,
+                    bio = user.Bio,
+                    gender = user.Gender,
+                    lookingFor = user.LookingFor,
+                    personality = user.Personality,
+                    vibe = user.Vibe,
+                    language = user.Language,
+                    interests = user.Interests,
+                    photoUrl = user.PhotoUrl
+                });
             }
             catch (Exception ex)
             {
@@ -102,31 +110,35 @@ namespace backend.Controllers
             }
         }
 
-        // ================= GET USERS (MATCHING LIST) =================
+        // ================= GET USERS =================
         [HttpGet("users")]
         public IActionResult GetUsers()
         {
             try
             {
-                var email = User.FindFirst("email")?.Value;
+                var email = GetUserEmail();
 
                 if (string.IsNullOrEmpty(email))
                     return BadRequest("Invalid user token");
 
                 var users = _context.Users
-                    .Where(x => x.Email != email && x.ProfileCompleted)
-                    .Select(x => new ProfileDto
+                    .Where(x =>
+                        x.Email != email &&
+                        x.ProfileCompleted == true)
+                    .Select(x => new
                     {
-                        Name = x.Name,
-                        Age = x.Age,
-                        Location = x.Location,
-                        Bio = x.Bio,
-                        Gender = x.Gender,
-                        LookingFor = x.LookingFor,
-                        Personality = x.Personality,
-                        Vibe = x.Vibe,
-                        Interests = x.Interests,
-                        PhotoUrl = x.PhotoUrl
+                        id = x.Id,
+                        name = x.Name,
+                        age = x.Age,
+                        location = x.Location,
+                        bio = x.Bio,
+                        gender = x.Gender,
+                        lookingFor = x.LookingFor,
+                        personality = x.Personality,
+                        vibe = x.Vibe,
+                        language = x.Language,
+                        interests = x.Interests,
+                        photoUrl = x.PhotoUrl
                     })
                     .ToList();
 

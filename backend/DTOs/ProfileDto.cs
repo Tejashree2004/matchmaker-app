@@ -19,7 +19,7 @@ namespace backend.DTOs
         public string? Vibe { get; set; }
 
         public string? Interests { get; set; }
-
+public string? Language { get; set; }
         public string? PhotoUrl { get; set; }
     }
 }

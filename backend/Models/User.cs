@@ -35,7 +35,7 @@ namespace backend.Models
         public string? Interests { get; set; }
 
         public string? PhotoUrl { get; set; }
-
+public string? Language { get; set; }
         public bool ProfileCompleted { get; set; } = false;
     }
 }

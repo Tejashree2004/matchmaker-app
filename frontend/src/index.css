@@ -958,7 +958,6 @@ textarea::placeholder {
 
 
 /* ================= PROFILE AVATAR ================= */
-
 .profile-avatar {
   position: relative;
 
@@ -966,17 +965,38 @@ textarea::placeholder {
   height: 42px;
 
   border-radius: 50%;
+
   overflow: hidden;
 
   cursor: pointer;
 
-  border: 2px solid rgba(255,255,255,0.4);
+  border: 2px solid rgba(255,255,255,0.35);
 
-  box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.08);
 
-  transition: 0.25s;
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 6px 15px rgba(0,0,0,0.18);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
+/* ================= HOVER ================= */
+
+.profile-avatar:hover {
+
+  transform: scale(1.07);
+
+  border-color: #ff4d8d;
+
+  box-shadow:
+    0 0 16px rgba(255,77,141,0.35),
+    0 8px 20px rgba(0,0,0,0.22);
+}
 .profile-avatar:hover {
   transform: scale(1.08);
 }
@@ -1783,4 +1803,420 @@ textarea::placeholder {
   justify-content: center;
   align-items: flex-end;
   z-index: 999;
+}
+
+/* ================= HOME CONTAINER ================= */
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    #ff4f7b 0%,
+    #ff6b8f 45%,
+    #ff8fab 100%
+  );
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.home-header {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto 22px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-logo {
+  color: white;
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.home-subtitle {
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* ================= MAIN CARD ================= */
+.main-card-wrapper {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+}
+
+/* ================= MY VIBE CARD ================= */
+.my-vibe-card {
+  width: 100%;
+  max-width: 430px;
+
+  margin: 22px auto 0;
+
+  background: rgba(255,255,255,0.16);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 24px;
+
+  padding: 18px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.my-vibe-card h3 {
+  color: white;
+  font-size: 20px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.my-vibe-card p {
+  color: rgba(255,255,255,0.8);
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+/* ================= FIRE SCORE ================= */
+.vibe-score {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.16);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.vibe-score svg {
+  margin-bottom: 3px;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.swipe-actions {
+  width: 100%;
+  max-width: 320px;
+
+  margin: 28px auto 0;
+
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* ================= SWIPE BUTTON ================= */
+.swipe-btn {
+  width: 82px;
+  height: 82px;
+
+  border-radius: 50%;
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: 0.25s ease;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* dislike */
+.dislike-btn {
+  background: white;
+  color: #ff4d6d;
+}
+
+/* like */
+.like-btn {
+  background: linear-gradient(
+    135deg,
+    #ff4d88,
+    #ff6ba6
+  );
+
+  color: white;
+}
+
+/* hover */
+.swipe-btn:hover {
+  transform: translateY(-5px) scale(1.06);
+}
+
+/* click */
+.swipe-btn:active {
+  transform: scale(0.95);
+}
+
+/* ================= LOADING SCREEN ================= */
+.loading-screen {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-heart {
+  font-size: 60px;
+  animation: pulse 1s infinite;
+}
+
+.loading-screen h2 {
+  margin-top: 20px;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ================= EMPTY STATE ================= */
+.empty-wrapper {
+  width: 100%;
+  max-width: 430px;
+
+  margin: 100px auto 0;
+
+  background: rgba(255,255,255,0.14);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  border-radius: 32px;
+
+  padding: 50px 30px;
+
+  text-align: center;
+
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.empty-icon {
+  font-size: 70px;
+  margin-bottom: 18px;
+}
+
+.empty-wrapper h2 {
+  color: white;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.empty-wrapper p {
+  color: rgba(255,255,255,0.8);
+  font-size: 16px;
+  line-height: 1.5;
+}
+/* ================= WRAPPER ================= */
+
+.profile-avatar-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+/* ================= WRAPPER ================= */
+
+.profile-avatar-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+/* ================= AVATAR ================= */
+
+.profile-avatar {
+  position: relative;
+
+  width: 54px;
+  height: 54px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.08);
+
+  border: 2px solid rgba(255,255,255,0.18);
+
+  backdrop-filter: blur(14px);
+
+  transition: 0.3s ease;
+
+  box-shadow:
+    0 4px 18px rgba(0,0,0,0.18);
+}
+
+/* ================= HOVER ================= */
+
+.profile-avatar-wrapper:hover
+.profile-avatar {
+
+  transform: scale(1.06);
+
+  border-color: #ff4d8d;
+
+  box-shadow:
+    0 0 20px rgba(255,77,141,0.35);
+}
+
+/* ================= IMAGE ================= */
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* ================= ONLINE DOT ================= */
+
+.online-dot {
+  position: absolute;
+
+  bottom: 3px;
+  right: 3px;
+
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #32ff7e;
+
+  border: 2px solid white;
+
+  box-shadow:
+    0 0 10px rgba(50,255,126,0.7);
+}
+
+/* ================= TOOLTIP ================= */
+
+.profile-tooltip {
+  position: absolute;
+
+  bottom: 72px;
+  left: 50%;
+
+  transform:
+    translateX(-50%)
+    translateY(10px);
+
+  background: rgba(20,20,20,0.96);
+
+  color: white;
+
+  padding: 9px 14px;
+
+  border-radius: 14px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+
+  z-index: 9999;
+
+  pointer-events: none;
+
+  box-shadow:
+    0 6px 22px rgba(0,0,0,0.28);
+}
+
+/* ================= TOOLTIP ARROW ================= */
+
+.profile-tooltip::before {
+  content: "";
+
+  position: absolute;
+
+  bottom: -5px;
+  left: 50%;
+
+  transform:
+    translateX(-50%)
+    rotate(45deg);
+
+  width: 10px;
+  height: 10px;
+
+  background: rgba(20,20,20,0.96);
+}
+
+/* ================= SHOW TOOLTIP ================= */
+
+.profile-avatar-wrapper:hover
+.profile-tooltip {
+
+  opacity: 1;
+
+  visibility: visible;
+
+  transform:
+    translateX(-50%)
+    translateY(0px);
 }

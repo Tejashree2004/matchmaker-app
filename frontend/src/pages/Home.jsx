@@ -4,7 +4,6 @@ import {
   FaHeart,
   FaTimes,
   FaFire,
-  FaComments,
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
@@ -16,8 +15,10 @@ import BottomNavbar from "../components/BottomNavbar";
 import ProfileAvatar from "../components/ProfileAvatar";
 
 function Home() {
+
   const navigate = useNavigate();
 
+  // ================= STATES =================
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -25,76 +26,113 @@ function Home() {
 
   // ================= FETCH USERS =================
   useEffect(() => {
+
     fetchUsers();
+
   }, []);
 
   const fetchUsers = async () => {
+
     try {
+
       setLoading(true);
 
       const response =
         await axiosInstance.get("/Profile/users");
 
-      setUsers(response || []);
+      console.log("✅ USERS:", response);
+
+      if (Array.isArray(response)) {
+
+        setUsers(response);
+
+      } else {
+
+        setUsers([]);
+
+      }
+
     } catch (err) {
-      console.log("Fetch users error:", err);
+
+      console.log("❌ Fetch users error:", err);
+
+      setUsers([]);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   // ================= SWIPE =================
   const handleSwipe = async (isLike) => {
+
     try {
+
       const selectedUser = users[currentIndex];
 
       if (!selectedUser) return;
 
-      // BACKEND API
+      // SAVE SWIPE
       await axiosInstance.post("/Profile/swipe", {
         likedUserId: selectedUser.id,
         isLike,
       });
 
-      // LOCAL MATCH SAVE
+      // SAVE MATCH LOCALLY
       if (isLike) {
-        const existing =
+
+        const existingMatches =
           JSON.parse(localStorage.getItem("matches")) || [];
 
-        existing.push(selectedUser);
+        const alreadyExists =
+          existingMatches.some(
+            (item) => item.id === selectedUser.id
+          );
 
-        localStorage.setItem(
-          "matches",
-          JSON.stringify(existing)
-        );
+        if (!alreadyExists) {
+
+          existingMatches.push(selectedUser);
+
+          localStorage.setItem(
+            "matches",
+            JSON.stringify(existingMatches)
+          );
+        }
       }
 
-      // NEXT CARD
+      // NEXT USER
       setCurrentIndex((prev) => prev + 1);
 
     } catch (err) {
-      console.log("Swipe error:", err);
+
+      console.log("❌ Swipe error:", err);
+
+      setCurrentIndex((prev) => prev + 1);
+
     }
   };
 
-  // ================= USER PROFILE =================
+  // ================= MY PROFILE =================
   const myProfile =
     JSON.parse(localStorage.getItem("userProfile")) || {};
 
   // ================= LOADING =================
   if (loading) {
+
     return (
       <div className="home-container">
 
-        <div className="empty-card">
+        <div className="loading-screen">
 
-          <h2>Finding your vibe 💖</h2>
-
-          <div className="loader">
-            <span></span>
-            <span></span>
-            <span></span>
+          <div className="loader-heart">
+            💖
           </div>
+
+          <h2>
+            Finding your perfect vibe...
+          </h2>
 
         </div>
 
@@ -102,22 +140,29 @@ function Home() {
     );
   }
 
-  // ================= EMPTY =================
-  if (!users.length || currentIndex >= users.length) {
+  // ================= EMPTY STATE =================
+  if (
+    !users ||
+    users.length === 0 ||
+    currentIndex >= users.length
+  ) {
+
     return (
       <div className="home-container">
 
-        {/* ================= TOP BAR ================= */}
-        <div className="top-bar">
+        {/* ================= HEADER ================= */}
+        <div className="home-header">
 
           <div>
-            <h2 className="logo-text">
-              SoulSync 💖
-            </h2>
 
-            <p className="top-sub">
-              No new matches right now
+            <h1 className="app-logo">
+              SoulSync 💖
+            </h1>
+
+            <p className="home-subtitle">
+              No new profiles nearby
             </p>
+
           </div>
 
           <ProfileAvatar />
@@ -125,13 +170,15 @@ function Home() {
         </div>
 
         {/* ================= EMPTY ================= */}
-        <div className="empty-state-card">
+        <div className="empty-wrapper">
 
-          <div className="empty-heart">
+          <div className="empty-icon">
             💔
           </div>
 
-          <h2>No More Profiles</h2>
+          <h2>
+            No More Profiles
+          </h2>
 
           <p>
             New people will appear soon.
@@ -151,81 +198,40 @@ function Home() {
   return (
     <div className="home-container">
 
-      {/* ================= TOP BAR ================= */}
-      <div className="top-bar">
+      {/* ================= HEADER ================= */}
+      <div className="home-header">
 
         <div>
 
-          <h2 className="logo-text">
+          <h1 className="app-logo">
             SoulSync 💖
-          </h2>
+          </h1>
 
-          <p className="top-sub">
-            Discover your perfect vibe
+          <p className="home-subtitle">
+            Discover meaningful connections
           </p>
 
         </div>
 
-        <div className="top-right">
-
-          {/* MATCHES */}
-          <button
-            className="top-circle-btn"
-            onClick={() => navigate("/matches")}
-          >
-            <FaHeart />
-          </button>
-
-          {/* CHAT */}
-          <button
-            className="top-circle-btn"
-            onClick={() => navigate("/chat")}
-          >
-            <FaComments />
-          </button>
-
-          {/* PROFILE */}
-          <ProfileAvatar />
-
-        </div>
+        <ProfileAvatar />
 
       </div>
 
-      {/* ================= SWIPE CARD ================= */}
-      <div className="card-stack">
+      {/* ================= MAIN CARD ================= */}
+      <div className="main-card-wrapper">
 
         <SwipeCard user={currentUser} />
 
       </div>
 
-      {/* ================= USER SMALL INFO ================= */}
-      <div className="mini-profile-bar">
+      
 
-        <div>
-
-          <h3>
-            {myProfile.name || "You"} ✨
-          </h3>
-
-          <p>
-            {myProfile.location || "India"}
-          </p>
-
-        </div>
-
-        <div className="fire-box">
-          <FaFire />
-          <span>24</span>
-        </div>
-
-      </div>
-
-      {/* ================= ACTIONS ================= */}
-      <div className="action-buttons">
+      {/* ================= ACTION BUTTONS ================= */}
+      <div className="swipe-actions">
 
         {/* DISLIKE */}
         <button
-          className="circle-btn dislike"
+          className="swipe-btn dislike-btn"
           onClick={() => handleSwipe(false)}
         >
           <FaTimes />
@@ -233,13 +239,16 @@ function Home() {
 
         {/* LIKE */}
         <button
-          className="circle-btn like"
+          className="swipe-btn like-btn"
           onClick={() => handleSwipe(true)}
         >
           <FaHeart />
         </button>
 
       </div>
+
+      {/* ================= BOTTOM SPACE ================= */}
+      <div style={{ height: "120px" }}></div>
 
       {/* ================= NAVBAR ================= */}
       <BottomNavbar />

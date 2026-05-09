@@ -11,21 +11,34 @@ import {
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import BottomNavbar from "../components/BottomNavbar";
 
 function Settings() {
+
   const navigate = useNavigate();
 
-  // ================= USER DATA =================
-  const user =
-    JSON.parse(localStorage.getItem("userProfile")) || {};
+  // ================= USER STATE =================
+  const [user, setUser] = useState({});
 
+  // ================= LOAD USER =================
+  useEffect(() => {
+
+    const savedUser =
+      JSON.parse(localStorage.getItem("userProfile")) || {};
+
+    setUser(savedUser);
+
+  }, []);
+
+  // ================= PROFILE IMAGE =================
   const profileImage =
-    user.photoPreview ||
     user.photoUrl ||
+    user.photoPreview ||
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
 
+  // ================= MENU ITEMS =================
   const menuItems = [
     {
       icon: <FaUser />,
@@ -67,6 +80,7 @@ function Settings() {
 
   // ================= LOGOUT =================
   const handleLogout = () => {
+
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("userProfile");
 
@@ -79,7 +93,9 @@ function Settings() {
       {/* ================= TOP ================= */}
       <div className="settings-top">
 
-        <h2>My Profile 💖</h2>
+        <h2>
+          My Profile 💖
+        </h2>
 
       </div>
 
@@ -88,8 +104,12 @@ function Settings() {
 
         <div className="profile-img-wrap">
 
-          <img src={profileImage} alt="profile" />
+          <img
+            src={profileImage}
+            alt="profile"
+          />
 
+          {/* CAMERA BUTTON */}
           <div
             className="camera-icon"
             onClick={() => navigate("/profile-setup")}
@@ -99,17 +119,12 @@ function Settings() {
 
         </div>
 
+        {/* NAME */}
         <h2>
           {user.name || "Your Name"}
         </h2>
 
-        <p>
-          {user.bio || "No bio added yet"}
-        </p>
-
-        <span className="location-tag">
-          📍 {user.location || "Unknown"}
-        </span>
+    
 
       </div>
 
@@ -130,8 +145,15 @@ function Settings() {
               </div>
 
               <div>
-                <h4>{item.title}</h4>
-                <p>{item.sub}</p>
+
+                <h4>
+                  {item.title}
+                </h4>
+
+                <p>
+                  {item.sub}
+                </p>
+
               </div>
 
             </div>
@@ -144,9 +166,15 @@ function Settings() {
       </div>
 
       {/* ================= LOGOUT ================= */}
-      <button className="logout-btn" onClick={handleLogout}>
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+      >
+
         <FaSignOutAlt />
+
         Logout
+
       </button>
 
       {/* ================= NAVBAR ================= */}
