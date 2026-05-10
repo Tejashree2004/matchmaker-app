@@ -1,13 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+
 using backend.Models;
 
 namespace backend.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options) { }
+        public AppDbContext(
+            DbContextOptions<AppDbContext> options
+        ) : base(options)
+        {
+        }
 
+        // ================= USERS TABLE =================
         public DbSet<User> Users { get; set; }
+
+        // ================= SWIPES TABLE =================
+        public DbSet<Swipe> Swipes { get; set; }
     }
 }

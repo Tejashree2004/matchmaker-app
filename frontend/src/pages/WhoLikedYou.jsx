@@ -1,24 +1,39 @@
 import { useEffect, useState } from "react";
 
+import axiosInstance from "../api/axios";
+
 import BottomNavbar from "../components/BottomNavbar";
 
-function Matches() {
+function WhoLikedYou() {
 
-  const [matches, setMatches] =
+  const [users, setUsers] =
     useState([]);
 
   useEffect(() => {
 
-    const savedMatches =
-      JSON.parse(
-        localStorage.getItem(
-          "matches"
-        )
-      ) || [];
-
-    setMatches(savedMatches);
+    fetchLikes();
 
   }, []);
+
+  const fetchLikes = async () => {
+
+    try {
+
+      const response =
+        await axiosInstance.get(
+          "/Profile/who-liked-you"
+        );
+
+      setUsers(
+        response.data || []
+      );
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+  };
 
   return (
 
@@ -29,27 +44,27 @@ function Matches() {
         <div>
 
           <h1 className="app-logo">
-            Matches 💕
+            Who Liked You 💘
           </h1>
 
           <p className="home-subtitle">
-            Your connections
+            People interested in you
           </p>
 
         </div>
 
       </div>
 
-      {matches.length === 0 ? (
+      {users.length === 0 ? (
 
         <div className="empty-wrapper">
 
           <div className="empty-icon">
-            💔
+            😢
           </div>
 
           <h2>
-            No Matches Yet
+            No Likes Yet
           </h2>
 
         </div>
@@ -58,7 +73,7 @@ function Matches() {
 
         <div className="likes-grid">
 
-          {matches.map(
+          {users.map(
             (user) => (
 
               <div
@@ -99,4 +114,4 @@ function Matches() {
   );
 }
 
-export default Matches;
+export default WhoLikedYou;

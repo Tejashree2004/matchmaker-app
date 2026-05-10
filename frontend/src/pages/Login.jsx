@@ -76,10 +76,7 @@ function Login() {
         {/* LOGIN BUTTON */}
         <Button text="Login" onClick={handleLogin} />
 
-        {/* GUEST */}
-        <p className="guest-text" onClick={handleGuest}>
-          Or Continue as Guest
-        </p>
+       
 
         {/* SIGNUP */}
         <p className="auth-text">

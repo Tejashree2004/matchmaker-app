@@ -3,24 +3,66 @@ import {
   FaHeart,
   FaMusic,
   FaStar,
-} from "react-icons/fa";
 
-function SwipeCard({ user }) {
+  FaFire,
+} from "react-icons/fa";
+import { FaGlobe } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+
+
+
+  // ================= DEFAULT IMAGE =================
+  function SwipeCard({ user }) {
+
+  console.log("USER IMAGE DATA:", user);
+  const defaultAvatar =
+    "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+
+  // ================= SAFE IMAGE =================
+const isValidImage = (url) => {
+  if (!url) return false;
+  if (typeof url !== "string") return false;
+  if (!url.trim()) return false;
+  if (url.startsWith("blob:")) return false;
+  return true;
+};
+
+const profileImage =
+  isValidImage(user?.photoUrl)
+    ? user.photoUrl
+    : isValidImage(user?.photo)
+    ? user.photo
+    : isValidImage(user?.profilePhoto)
+    ? user.profilePhoto
+    : defaultAvatar;
+
+  // ================= SAFE INTERESTS =================
+  const interests =
+    Array.isArray(user?.interests)
+      ? user.interests
+      : typeof user?.interests === "string"
+        ? user.interests.split(",").map(i => i.trim())
+        : [];
+
   return (
     <div className="swipe-card">
 
       {/* ================= IMAGE ================= */}
-      <img
-        src={
-          user.photoUrl ||
-          "https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-        }
-        alt="profile"
-        className="swipe-img"
-      />
+      <div className="swipe-image-wrapper">
 
-      {/* ================= DARK OVERLAY ================= */}
-      <div className="overlay"></div>
+        <img
+          src={profileImage}
+          alt="profile"
+          className="swipe-img"
+          onError={(e) => {
+            e.target.src = defaultAvatar;
+          }}
+        />
+
+        {/* DARK OVERLAY */}
+        <div className="overlay"></div>
+
+      </div>
 
       {/* ================= TOP BADGES ================= */}
       <div className="card-top-badges">
@@ -44,8 +86,7 @@ function SwipeCard({ user }) {
         <div className="name-row">
 
           <h2>
-            {user.name || "Sophia"},{" "}
-            {user.age || 22}
+            {user?.name || "Unknown"}, {user?.age || "--"}
           </h2>
 
           <div className="mini-like">
@@ -60,42 +101,74 @@ function SwipeCard({ user }) {
           <FaMapMarkerAlt />
 
           <p>
-            {user.location || "Mumbai"}
+            {user?.location || "Not available"}
           </p>
 
         </div>
 
-        {/* PERSONALITY */}
-        <div className="personality-box">
+      {/* PERSONALITY */}
+<div className="personality-box">
 
-          <FaMusic />
+  <FaUser />
 
-          <span>
-            {user.personality || "Fun Loving"}
-          </span>
+  <span>
+    {user?.personality || "Fun Loving"}
+  </span>
 
-        </div>
+</div>
+
+        {/* LANGUAGE */}
+{user?.language ? (
+  <div className="language-box">
+
+    <FaGlobe />
+
+    <span>
+      {user.language}
+    </span>
+
+  </div>
+) : null}
+
+        {/* VIBE */}
+        {user?.vibe ? (
+          <div className="vibe-box">
+
+            <FaFire />
+
+            <span>
+              {user.vibe}
+            </span>
+
+          </div>
+        ) : null}
 
         {/* INTERESTS */}
         <div className="interest-wrap">
 
-          {user.interests
-            ?.split(",")
-            .map((item, index) => (
+          {interests.length > 0 ? (
+            interests.map((item, index) => (
               <span
                 key={index}
                 className="interest-chip"
               >
                 {item}
               </span>
-            ))}
+            ))
+          ) : (
+            <span className="interest-chip">
+              ✨ Good Vibes
+            </span>
+          )}
 
         </div>
 
         {/* BIO */}
         <p className="bio">
-          {user.bio ||
+
+          {user?.bio ||
             "Looking for genuine conversations and beautiful vibes ✨"}
+
         </p>
 
       </div>

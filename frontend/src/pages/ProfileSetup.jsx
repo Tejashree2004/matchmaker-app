@@ -23,23 +23,34 @@ function ProfileSetup() {
   const [bio, setBio] = useState("");
 
   const [photo, setPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoPreview, setPhotoPreview] =
+    useState("");
 
   const [gender, setGender] = useState("");
-  const [lookingFor, setLookingFor] = useState("");
+  const [lookingFor, setLookingFor] =
+    useState("");
 
-  const [personality, setPersonality] = useState("");
+  const [personality, setPersonality] =
+    useState("");
 
-  const [language, setLanguage] = useState("");
-  const [weekendMood, setWeekendMood] = useState("");
+  const [language, setLanguage] =
+    useState("");
 
-  const [interests, setInterests] = useState([]);
+  const [weekendMood, setWeekendMood] =
+    useState("");
+
+  const [interests, setInterests] =
+    useState([]);
 
   const [showPhotoMenu, setShowPhotoMenu] =
     useState(false);
 
   const [showPhotoViewer, setShowPhotoViewer] =
     useState(false);
+
+  // ================= DEFAULT AVATAR =================
+  const defaultAvatar =
+    "https://cdn-icons-png.flaticon.com/512/847/847969.png";
 
   // ================= LOAD PROFILE =================
   useEffect(() => {
@@ -64,22 +75,33 @@ function ProfileSetup() {
       setBio(response.bio || "");
 
       setGender(response.gender || "");
-      setLookingFor(response.lookingFor || "");
 
-      setPersonality(response.personality || "");
+      setLookingFor(
+        response.lookingFor || ""
+      );
 
-      setLanguage(response.language || "");
+      setPersonality(
+        response.personality || ""
+      );
+
+      setLanguage(
+        response.language || ""
+      );
 
       setWeekendMood(
         response.vibe || ""
       );
 
-         setPhotoPreview(
-  response.photoUrl &&
-  !response.photoUrl.startsWith("blob:")
-    ? response.photoUrl
-    : ""
-);
+    // ================= PHOTO LOAD =================
+if (response.photoUrl) {
+
+  setPhotoPreview(response.photoUrl);
+
+} else {
+
+  setPhotoPreview("");
+
+}
 
       // ================= INTERESTS =================
       if (response.interests) {
@@ -93,20 +115,34 @@ function ProfileSetup() {
 
       // ================= SAFE LOCAL STORAGE =================
       const safeProfile = {
+
         name: response.name || "",
+
         age: response.age || "",
-        location: response.location || "",
+
+        location:
+          response.location || "",
+
         bio: response.bio || "",
-        gender: response.gender || "",
+
+        gender:
+          response.gender || "",
+
         lookingFor:
           response.lookingFor || "",
+
         personality:
           response.personality || "",
+
         language:
           response.language || "",
-        vibe: response.vibe || "",
+
+        vibe:
+          response.vibe || "",
+
         interests:
           response.interests || "",
+
         photoUrl:
           response.photoUrl || "",
       };
@@ -116,9 +152,11 @@ function ProfileSetup() {
         JSON.stringify(safeProfile)
       );
 
-      localStorage.setItem(
-        "profileName",
-        response.name || ""
+      // ================= LIVE UPDATE =================
+      window.dispatchEvent(
+        new Event(
+          "userProfileUpdated"
+        )
       );
 
     } catch (err) {
@@ -128,7 +166,7 @@ function ProfileSetup() {
         err
       );
 
-      // ================= FALLBACK LOCAL DATA =================
+      // ================= FALLBACK =================
       const saved =
         JSON.parse(
           localStorage.getItem(
@@ -159,12 +197,22 @@ function ProfileSetup() {
         saved.vibe || ""
       );
 
-    setPhotoPreview(
-  saved.photoUrl &&
-  !saved.photoUrl.startsWith("blob:")
-    ? saved.photoUrl
-    : ""
-);
+      if (
+        saved.photoUrl &&
+        !saved.photoUrl.startsWith(
+          "blob:"
+        )
+      ) {
+
+        setPhotoPreview(
+          saved.photoUrl
+        );
+
+      } else {
+
+        setPhotoPreview("");
+
+      }
 
       if (saved.interests) {
 
@@ -199,7 +247,7 @@ function ProfileSetup() {
 
     setPhoto(file);
 
-    // ================= LIGHTWEIGHT PREVIEW =================
+    // ================= PREVIEW =================
     const imageUrl =
       URL.createObjectURL(file);
 
@@ -227,6 +275,33 @@ function ProfileSetup() {
     setPhotoPreview("");
 
     setShowPhotoMenu(false);
+
+    // ================= REMOVE FROM STORAGE =================
+    const existingProfile =
+      JSON.parse(
+        localStorage.getItem(
+          "userProfile"
+        )
+      ) || {};
+
+    const updatedProfile = {
+
+      ...existingProfile,
+
+      photoUrl: "",
+    };
+
+    localStorage.setItem(
+      "userProfile",
+      JSON.stringify(updatedProfile)
+    );
+
+    // ================= LIVE UPDATE =================
+    window.dispatchEvent(
+      new Event(
+        "userProfileUpdated"
+      )
+    );
   };
 
   const handleChangePhoto = () => {
@@ -272,9 +347,9 @@ function ProfileSetup() {
         interests:
           interests.join(","),
 
-        // IMPORTANT
-        // don't save huge base64 image
-        photoUrl: "",
+        // backend photo later
+        photoUrl:
+          photoPreview || "",
       };
 
       const response =
@@ -283,32 +358,32 @@ function ProfileSetup() {
         );
 
       // ================= SAFE STORAGE =================
-     const safeProfile = {
+      const safeProfile = {
 
-  name,
+        name,
 
-  age,
+        age,
 
-  location,
+        location,
 
-  bio,
+        bio,
 
-  gender,
+        gender,
 
-  lookingFor,
+        lookingFor,
 
-  personality,
+        personality,
 
-  language,
+        language,
 
-  vibe: weekendMood,
+        vibe: weekendMood,
 
-  interests:
-    interests.join(","),
+        interests:
+          interests.join(","),
 
-  // don't store blob url
-  photoUrl: "",
-};
+        photoUrl:
+          photoPreview || "",
+      };
 
       localStorage.setItem(
         "userProfile",
@@ -318,6 +393,13 @@ function ProfileSetup() {
       localStorage.setItem(
         "profileName",
         name || ""
+      );
+
+      // ================= LIVE UPDATE =================
+      window.dispatchEvent(
+        new Event(
+          "userProfileUpdated"
+        )
       );
 
       alert(
@@ -393,24 +475,14 @@ function ProfileSetup() {
                 }
               >
 
-                {photoPreview ? (
-
-                  <img
-                    src={photoPreview}
-                    alt="profile"
-                  />
-
-                ) : (
-
-                  <div className="empty-circle">
-
-                    <span>
-                      Upload
-                    </span>
-
-                  </div>
-
-                )}
+                <img
+                  src={
+                    photoPreview ||
+                    defaultAvatar
+                  }
+                  alt="profile"
+                  className="profile-preview-img"
+                />
 
                 <div className="plus-badge">
                   +
@@ -445,13 +517,15 @@ function ProfileSetup() {
                     }
                   >
 
-                    <button
-                      onClick={
-                        handleViewPhoto
-                      }
-                    >
-                      👁 View Photo
-                    </button>
+                    {photoPreview && (
+                      <button
+                        onClick={
+                          handleViewPhoto
+                        }
+                      >
+                        👁 View Photo
+                      </button>
+                    )}
 
                     <button
                       onClick={
@@ -461,16 +535,18 @@ function ProfileSetup() {
                       ✏️ Change Photo
                     </button>
 
-                    <button
-                      onClick={
-                        handleRemovePhoto
-                      }
-                      style={{
-                        color: "red",
-                      }}
-                    >
-                      🗑 Remove Photo
-                    </button>
+                    {photoPreview && (
+                      <button
+                        onClick={
+                          handleRemovePhoto
+                        }
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        🗑 Remove Photo
+                      </button>
+                    )}
 
                     <button
                       onClick={() =>
@@ -765,32 +841,33 @@ function ProfileSetup() {
       </div>
 
       {/* ================= PHOTO VIEWER ================= */}
-      {showPhotoViewer && (
-        <div
-          className="photo-viewer-backdrop"
-          onClick={() =>
-            setShowPhotoViewer(
-              false
-            )
-          }
-        >
-
+      {showPhotoViewer &&
+        photoPreview && (
           <div
-            className="photo-viewer"
-            onClick={(e) =>
-              e.stopPropagation()
+            className="photo-viewer-backdrop"
+            onClick={() =>
+              setShowPhotoViewer(
+                false
+              )
             }
           >
 
-            <img
-              src={photoPreview}
-              alt="full-view"
-            />
+            <div
+              className="photo-viewer"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+
+              <img
+                src={photoPreview}
+                alt="full-view"
+              />
+
+            </div>
 
           </div>
-
-        </div>
-      )}
+        )}
 
     </div>
   );

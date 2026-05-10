@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 import {
   FaHeart,
   FaTimes,
-  FaFire,
 } from "react-icons/fa";
-
-import { useNavigate } from "react-router-dom";
 
 import axiosInstance from "../api/axios";
 
@@ -16,13 +13,15 @@ import ProfileAvatar from "../components/ProfileAvatar";
 
 function Home() {
 
-  const navigate = useNavigate();
-
   // ================= STATES =================
-  const [users, setUsers] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [users, setUsers] =
+    useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] =
+    useState(0);
+
+  const [loading, setLoading] =
+    useState(true);
 
   // ================= FETCH USERS =================
   useEffect(() => {
@@ -31,6 +30,7 @@ function Home() {
 
   }, []);
 
+  // ================= GET USERS =================
   const fetchUsers = async () => {
 
     try {
@@ -38,23 +38,45 @@ function Home() {
       setLoading(true);
 
       const response =
-        await axiosInstance.get("/Profile/users");
+        await axiosInstance.get(
+          "/Profile/users"
+        );
 
-      console.log("✅ USERS:", response);
+      console.log(
+        "✅ USERS:",
+        response
+      );
 
-      if (Array.isArray(response)) {
+      // ================= SAFE ARRAY =================
+     const usersData =
+  Array.isArray(response)
+    ? response
+    : response?.data || [];
 
-        setUsers(response);
+      // ================= GET MY PROFILE =================
+      const myProfile =
+        JSON.parse(
+          localStorage.getItem(
+            "userProfile"
+          )
+        ) || {};
 
-      } else {
+      // ================= REMOVE MYSELF =================
+      const filteredUsers =
+        usersData.filter(
+          (user) =>
+            user.id !==
+            (myProfile.id || myProfile.Id)
+        );
 
-        setUsers([]);
-
-      }
+      setUsers(filteredUsers || []);
 
     } catch (err) {
 
-      console.log("❌ Fetch users error:", err);
+      console.log(
+        "❌ Fetch users error:",
+        err
+      );
 
       setUsers([]);
 
@@ -65,63 +87,80 @@ function Home() {
     }
   };
 
-  // ================= SWIPE =================
-  const handleSwipe = async (isLike) => {
+  // ================= HANDLE SWIPE =================
+  const handleSwipe = async (
+    isLike
+  ) => {
 
+    const selectedUser =
+      users[currentIndex];
+
+    if (!selectedUser) return;
+
+    // ================= SAVE TO BACKEND =================
     try {
 
-      const selectedUser = users[currentIndex];
+      await axiosInstance.post(
+        "/Swipe/swipe",
+        {
+          likedUserId:
+            selectedUser.id,
 
-      if (!selectedUser) return;
-
-      // SAVE SWIPE
-      await axiosInstance.post("/Profile/swipe", {
-        likedUserId: selectedUser.id,
-        isLike,
-      });
-
-      // SAVE MATCH LOCALLY
-      if (isLike) {
-
-        const existingMatches =
-          JSON.parse(localStorage.getItem("matches")) || [];
-
-        const alreadyExists =
-          existingMatches.some(
-            (item) => item.id === selectedUser.id
-          );
-
-        if (!alreadyExists) {
-
-          existingMatches.push(selectedUser);
-
-          localStorage.setItem(
-            "matches",
-            JSON.stringify(existingMatches)
-          );
+          isLike,
         }
-      }
-
-      // NEXT USER
-      setCurrentIndex((prev) => prev + 1);
+      );
 
     } catch (err) {
 
-      console.log("❌ Swipe error:", err);
-
-      setCurrentIndex((prev) => prev + 1);
-
+      console.log(
+        "❌ Swipe API Error:",
+        err
+      );
     }
-  };
 
-  // ================= MY PROFILE =================
-  const myProfile =
-    JSON.parse(localStorage.getItem("userProfile")) || {};
+    // ================= SAVE LIKES =================
+    if (isLike) {
+
+      const existingLikes =
+        JSON.parse(
+          localStorage.getItem(
+            "myLikes"
+          )
+        ) || [];
+
+      const alreadyLiked =
+        existingLikes.some(
+          (item) =>
+            item.id ===
+            selectedUser.id
+        );
+
+      if (!alreadyLiked) {
+
+        existingLikes.push(
+          selectedUser
+        );
+
+        localStorage.setItem(
+          "myLikes",
+          JSON.stringify(
+            existingLikes
+          )
+        );
+      }
+    }
+
+    // ================= NEXT PROFILE =================
+    setCurrentIndex(
+      (prev) => prev + 1
+    );
+  };
 
   // ================= LOADING =================
   if (loading) {
 
     return (
+
       <div className="home-container">
 
         <div className="loading-screen">
@@ -148,9 +187,10 @@ function Home() {
   ) {
 
     return (
+
       <div className="home-container">
 
-        {/* ================= HEADER ================= */}
+        {/* HEADER */}
         <div className="home-header">
 
           <div>
@@ -169,7 +209,7 @@ function Home() {
 
         </div>
 
-        {/* ================= EMPTY ================= */}
+        {/* EMPTY */}
         <div className="empty-wrapper">
 
           <div className="empty-icon">
@@ -193,9 +233,11 @@ function Home() {
   }
 
   // ================= CURRENT USER =================
-  const currentUser = users[currentIndex];
+  const currentUser =
+    users[currentIndex] || null;
 
   return (
+
     <div className="home-container">
 
       {/* ================= HEADER ================= */}
@@ -217,40 +259,52 @@ function Home() {
 
       </div>
 
-      {/* ================= MAIN CARD ================= */}
+      {/* ================= CARD ================= */}
       <div className="main-card-wrapper">
 
-        <SwipeCard user={currentUser} />
+        <SwipeCard
+          user={currentUser}
+        />
 
       </div>
 
-      
-
-      {/* ================= ACTION BUTTONS ================= */}
+      {/* ================= ACTIONS ================= */}
       <div className="swipe-actions">
 
         {/* DISLIKE */}
         <button
           className="swipe-btn dislike-btn"
-          onClick={() => handleSwipe(false)}
+          onClick={() =>
+            handleSwipe(false)
+          }
         >
+
           <FaTimes />
+
         </button>
 
         {/* LIKE */}
         <button
           className="swipe-btn like-btn"
-          onClick={() => handleSwipe(true)}
+          onClick={() =>
+            handleSwipe(true)
+          }
         >
+
           <FaHeart />
+
         </button>
 
       </div>
 
-      {/* ================= BOTTOM SPACE ================= */}
-      <div style={{ height: "120px" }}></div>
+      {/* SPACE */}
+      <div
+        style={{
+          height: "120px",
+        }}
+      ></div>
 
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <BottomNavbar />
 
     </div>

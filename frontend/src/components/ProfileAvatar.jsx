@@ -6,67 +6,51 @@ function ProfileAvatar() {
   const navigate = useNavigate();
 
   // ================= STATE =================
-  const [userData, setUserData] =
-    useState({});
+  const [userData, setUserData] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("userProfile")) || {};
+    } catch {
+      return {};
+    }
+  });
 
-  // ================= LOAD USER =================
+  // ================= DEFAULT IMAGE =================
+  const defaultAvatar =
+    "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+
+  // ================= LIVE UPDATE =================
   useEffect(() => {
 
     const loadUser = () => {
-
       try {
-
         const storedUser =
-          JSON.parse(
-            localStorage.getItem(
-              "userProfile"
-            )
-          ) || {};
-
+          JSON.parse(localStorage.getItem("userProfile")) || {};
         setUserData(storedUser);
-
       } catch {
-
         setUserData({});
-
       }
     };
 
-    loadUser();
-
-    // ================= STORAGE UPDATE =================
-    const handleStorageChange = () => {
-      loadUser();
-    };
-
-    window.addEventListener(
-      "storage",
-      handleStorageChange
-    );
+    window.addEventListener("userProfileUpdated", loadUser);
 
     return () => {
-
-      window.removeEventListener(
-        "storage",
-        handleStorageChange
-      );
-
+      window.removeEventListener("userProfileUpdated", loadUser);
     };
 
   }, []);
 
-  // ================= PROFILE IMAGE =================
+  // ================= SAFE IMAGE (IMPORTANT FIX) =================
   const image =
-    userData.photoPreview ||
-    userData.photoUrl ||
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
+    userData?.photoUrl ||
+    defaultAvatar;
+
+  // ❌ photoPreview removed (CAUSES BLOB ERRORS)
 
   // ================= USER NAME =================
   const userName =
-    userData.name || "Profile";
+    userData?.name || "Profile";
 
   return (
-
     <div className="profile-avatar-wrapper">
 
       {/* ================= AVATAR ================= */}
@@ -81,16 +65,14 @@ function ProfileAvatar() {
           className="profile-avatar-img"
         />
 
-        {/* ================= ONLINE DOT ================= */}
+        {/* ONLINE DOT */}
         <span className="online-dot"></span>
 
       </div>
 
       {/* ================= TOOLTIP ================= */}
       <div className="profile-tooltip">
-
         {userName}
-
       </div>
 
     </div>
