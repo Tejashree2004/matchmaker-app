@@ -109,7 +109,7 @@ function Settings() {
       title: "You Liked",
       sub: "Profiles you liked",
       action: () =>
-        navigate("/liked-by-you"),
+       navigate("/my-likes"),
     },
 
     {

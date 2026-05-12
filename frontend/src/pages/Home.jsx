@@ -111,36 +111,50 @@ setUsers(filteredUsers);
     }
 
     // ================= SAVE LIKES =================
-    if (isLike) {
+   if (isLike) {
 
-      const existingLikes =
-        JSON.parse(
-          localStorage.getItem(
-            "myLikes"
-          )
-        ) || [];
+  const existingLikes =
+    JSON.parse(
+      localStorage.getItem(
+        "myLikes"
+      )
+    ) || [];
 
-      const alreadyLiked =
-        existingLikes.some(
-          (item) =>
-            item.id ===
-            selectedUser.id
-        );
+  const alreadyLiked =
+    existingLikes.some(
+      (item) =>
+        item.id ===
+        selectedUser.id
+    );
 
-      if (!alreadyLiked) {
+  if (!alreadyLiked) {
 
-        existingLikes.push(
-          selectedUser
-        );
+    existingLikes.push({
 
-        localStorage.setItem(
-          "myLikes",
-          JSON.stringify(
-            existingLikes
-          )
-        );
-      }
-    }
+      id: selectedUser.id,
+
+      name: selectedUser.name,
+
+      age: selectedUser.age,
+
+      location:
+        selectedUser.location,
+
+      bio: selectedUser.bio,
+
+      photoUrl:
+        selectedUser.photoUrl,
+
+    });
+
+    localStorage.setItem(
+      "myLikes",
+      JSON.stringify(
+        existingLikes
+      )
+    );
+  }
+}
 
     // ================= NEXT PROFILE =================
     setCurrentIndex(

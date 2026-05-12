@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 
+import {
+  FaMapMarkerAlt,
+  FaHeart,
+  FaFire,
+  FaUser,
+} from "react-icons/fa";
+
 import BottomNavbar from "../components/BottomNavbar";
-import axiosInstance from "../api/axios";
+
 function MyLikes() {
 
   // ================= STATES =================
@@ -9,36 +16,36 @@ function MyLikes() {
     useState([]);
 
   // ================= LOAD LIKES =================
-useEffect(() => {
+  useEffect(() => {
 
-  fetchLikes();
+    fetchLikes();
 
-}, []);
+  }, []);
 
-const fetchLikes = async () => {
+  // ================= GET LIKES =================
+  const fetchLikes = () => {
 
-  try {
+    try {
 
-    const response =
-      await axiosInstance.get(
-        "/Profile/my-likes"
+      const savedLikes =
+        JSON.parse(
+          localStorage.getItem(
+            "myLikes"
+          )
+        ) || [];
+
+      setLikedUsers(savedLikes);
+
+    } catch (err) {
+
+      console.log(
+        "❌ Likes error:",
+        err
       );
 
-    const data =
-      response?.data || [];
-
-    setLikedUsers(data);
-
-  } catch (err) {
-
-    console.log(
-      "❌ Fetch likes error:",
-      err
-    );
-
-    setLikedUsers([]);
-  }
-};
+      setLikedUsers([]);
+    }
+  };
 
   return (
 
@@ -82,8 +89,8 @@ const fetchLikes = async () => {
 
       ) : (
 
-        /* ================= LIKES GRID ================= */
-        <div className="likes-grid">
+        /* ================= LIKES LIST ================= */
+        <div className="likes-list">
 
           {likedUsers.map(
             (user, index) => (
@@ -93,43 +100,103 @@ const fetchLikes = async () => {
                 key={user.id || index}
               >
 
-                {/* PROFILE IMAGE */}
-      {user.photoUrl ? (
+                {/* ================= IMAGE ================= */}
+                <div className="liked-image-wrapper">
 
-<img
-  className="liked-img"
-  src={user.photoUrl}
-  alt="profile"
-  onError={(e) => {
-    e.target.style.display = "none";
-  }}
-/>
+                  {user.photoUrl ? (
 
-) : (
+                    <img
+                      src={user.photoUrl}
+                      alt="profile"
+                      className="liked-img"
+                    />
 
-  <div className="liked-empty">
-    No Photo
-  </div>
+                  ) : (
 
-)}
+                    <div className="liked-empty">
 
-                {/* INFO */}
-                <div className="liked-info">
+                      {user?.name
+                        ?.charAt(0)
+                        ?.toUpperCase() || "U"}
 
-                  <h3>
-                    {user.name || "Unknown"}
-                  </h3>
+                    </div>
 
-                  <p>
-                    📍 {user.location || "Unknown"}
-                  </p>
+                  )}
 
-                  <p>
-                    🎂 {user.age || "18"}
-                  </p>
+                  <div className="liked-overlay"></div>
 
-                  <p>
-                    ✨ {user.bio || "No bio"}
+                </div>
+
+                {/* ================= CONTENT ================= */}
+                <div className="liked-content">
+
+                  {/* NAME */}
+                  <div className="liked-name-row">
+
+                    <h2>
+
+                      {user.name || "Unknown"},
+                      {" "}
+                      {user.age || "18"}
+
+                    </h2>
+
+                    <div className="liked-heart">
+
+                      <FaHeart />
+
+                    </div>
+
+                  </div>
+
+                  {/* LOCATION */}
+                  <div className="liked-location">
+
+                    <FaMapMarkerAlt />
+
+                    <span>
+
+                      {user.location || "Unknown"}
+
+                    </span>
+
+                  </div>
+
+                  {/* PERSONALITY */}
+                  <div className="liked-personality">
+
+                    <FaUser />
+
+                    <span>
+
+                      {user.personality ||
+                        "Fun Loving"}
+
+                    </span>
+
+                  </div>
+
+                  {/* VIBE */}
+                  {user.vibe && (
+
+                    <div className="liked-vibe">
+
+                      <FaFire />
+
+                      <span>
+                        {user.vibe}
+                      </span>
+
+                    </div>
+
+                  )}
+
+                  {/* BIO */}
+                  <p className="liked-bio">
+
+                    {user.bio ||
+                      "Looking for genuine vibes ✨"}
+
                   </p>
 
                 </div>
@@ -141,9 +208,14 @@ const fetchLikes = async () => {
         </div>
       )}
 
-      {/* NAVBAR SPACE */}
-      <div style={{ height: "100px" }} />
+      {/* ================= SPACE ================= */}
+      <div
+        style={{
+          height: "100px",
+        }}
+      />
 
+      {/* ================= NAVBAR ================= */}
       <BottomNavbar />
 
     </div>
