@@ -22,6 +22,7 @@ function Home() {
 
   const [loading, setLoading] =
     useState(true);
+   
 
   // ================= FETCH USERS =================
   useEffect(() => {
@@ -171,11 +172,11 @@ setUsers(filteredUsers);
   }
 
   // ================= EMPTY STATE =================
-  if (
-    !users ||
-    users.length === 0 ||
-    currentIndex >= users.length
-  ) {
+ if (
+  !users ||
+  users.length === 0 ||
+currentIndex >= users.length
+) {
 
     return (
 
@@ -196,7 +197,8 @@ setUsers(filteredUsers);
 
           </div>
 
-          <ProfileAvatar />
+   
+<ProfileAvatar />
 
         </div>
 
@@ -257,16 +259,17 @@ return (
 
       </div>
 
-      {/* ================= CARD ================= */}
-      <div className="main-card-wrapper">
+ {/* ================= CARD ================= */}
+<div className="scroll-profiles-container">
 
-       {currentUser && (
-  <SwipeCard
-    user={currentUser}
-  />
-)}
+  {users.map((user) => (
 
-      </div>
+    <div
+      key={user.id}
+      className="scroll-profile"
+    >
+
+      <SwipeCard user={user} />
 
       {/* ================= ACTIONS ================= */}
       <div className="swipe-actions">
@@ -297,18 +300,24 @@ return (
 
       </div>
 
-      {/* SPACE */}
-      <div
-        style={{
-          height: "120px",
-        }}
-      ></div>
-
-      {/* NAVBAR */}
-      <BottomNavbar />
-
     </div>
-  );
+
+  ))}
+
+</div>
+
+{/* SPACE */}
+<div
+  style={{
+    height: "120px",
+  }}
+></div>
+
+{/* NAVBAR */}
+<BottomNavbar />
+
+</div>
+);
 }
 
 export default Home;

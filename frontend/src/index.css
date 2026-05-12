@@ -606,7 +606,102 @@ html, body {
   font-weight: 700;
 font-size: 90px;
 }
+.mode-toggle-btn {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 30px;
+  background: white;
+  color: #ff4b6e;
 
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.mode-toggle-btn:hover {
+  transform: scale(1.05);
+}
+/* ================= SCROLL CONTAINER ================= */
+
+.scroll-profiles-container {
+
+  position: fixed;
+
+  top: 85px;
+
+  bottom: 85px;
+
+  left: 0;
+
+  width: 100%;
+
+  overflow-y: auto;
+
+  scroll-snap-type: y mandatory;
+
+  scrollbar-width: none;
+}
+
+.scroll-profiles-container::-webkit-scrollbar {
+
+  display: none;
+}
+
+/* ================= EACH PROFILE ================= */
+
+.scroll-profile {
+
+  width: 100%;
+
+  min-height: 100%;
+
+  scroll-snap-align: start;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding-top: 15px;
+
+  padding-bottom: 15px;
+}
+
+/* ================= CARD ================= */
+
+.scroll-profile .swipe-card {
+
+  width: 90%;
+
+  max-width: 400px;
+
+  height: 72vh;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+}
+
+/* ================= ACTIONS ================= */
+
+.swipe-actions {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 25px;
+
+  margin-top: 18px;
+}
 /* ================= + BUTTON ================= */
 .plus-badge {
   position: absolute;
