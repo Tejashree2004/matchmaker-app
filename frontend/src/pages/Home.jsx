@@ -37,39 +37,30 @@ function Home() {
 
       setLoading(true);
 
-      const response =
-        await axiosInstance.get(
-          "/Profile/users"
-        );
+const response =
+  await axiosInstance.get(
+    "/Profile/users"
+  );
 
-      console.log(
-        "✅ USERS:",
-        response
-      );
+console.log(
+  "✅ USERS:",
+  response
+);
 
-      // ================= SAFE ARRAY =================
-     const usersData =
+const loggedInUserId =
+  Number(
+    localStorage.getItem("userId")
+  );
+
+const filteredUsers =
   Array.isArray(response)
-    ? response
-    : response?.data || [];
+    ? response.filter(
+        (u) =>
+          u.id !== loggedInUserId
+      )
+    : [];
 
-      // ================= GET MY PROFILE =================
-      const myProfile =
-        JSON.parse(
-          localStorage.getItem(
-            "userProfile"
-          )
-        ) || {};
-
-      // ================= REMOVE MYSELF =================
-      const filteredUsers =
-        usersData.filter(
-          (user) =>
-            user.id !==
-            (myProfile.id || myProfile.Id)
-        );
-
-      setUsers(filteredUsers || []);
+setUsers(filteredUsers);
 
     } catch (err) {
 
@@ -100,8 +91,8 @@ function Home() {
     // ================= SAVE TO BACKEND =================
     try {
 
-      await axiosInstance.post(
-        "/Swipe/swipe",
+     await axiosInstance.post(
+  "/Profile/swipe",
         {
           likedUserId:
             selectedUser.id,
@@ -232,11 +223,18 @@ function Home() {
     );
   }
 
-  // ================= CURRENT USER =================
-  const currentUser =
-    users[currentIndex] || null;
+  
+// ================= CURRENT USER =================
 
-  return (
+const currentUser =
+  users[currentIndex] || null;
+
+console.log(
+  "CURRENT USER:",
+  currentUser
+);
+
+return (
 
     <div className="home-container">
 
@@ -262,9 +260,11 @@ function Home() {
       {/* ================= CARD ================= */}
       <div className="main-card-wrapper">
 
-        <SwipeCard
-          user={currentUser}
-        />
+       {currentUser && (
+  <SwipeCard
+    user={currentUser}
+  />
+)}
 
       </div>
 

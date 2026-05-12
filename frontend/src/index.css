@@ -99,7 +99,6 @@ html, body {
   opacity: 0.95;
 }
 
-/* ================= SPLASH SCREEN ================= */
 /* ================= SPLASH SCREEN (NEW PREMIUM DESIGN) ================= */
 
 .splash {
@@ -549,6 +548,64 @@ html, body {
   height: 100%;
   background: #f5f5f5;
 }
+.empty-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: #ff4d6d;
+}
+
+.swipe-empty-image {
+  width: 100%;
+  height: 100%;
+  background: #ececec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #999;
+}
+.liked-empty{
+  width:100%;
+  height:220px;
+  background:#f1f1f1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#999;
+  font-size:20px;
+}
+.swipe-image-wrapper{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.no-image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 70px;
+
+  border-radius: 20px;
+
+  background: #f5f5f7;
+
+  color: #ff4b6e;
+  font-weight: 700;
+font-size: 90px;
+}
 
 /* ================= + BUTTON ================= */
 .plus-badge {
@@ -974,24 +1031,9 @@ textarea::placeholder {
 
 .logout-btn:hover {
   transform: translateY(-2px);
-}/* ================= HOME PAGE ================= */
-
-.home-container {
-  min-height: 100vh;
-
-  background:
-    linear-gradient(
-      180deg,
-      #ff4b6e 0%,
-      #ff758c 100%
-    );
-
-  padding: 18px 18px 120px;
-
-  overflow-x: hidden;
-
-  position: relative;
 }
+
+
 
 /* ================= HEADER ================= */
 
@@ -1036,92 +1078,7 @@ textarea::placeholder {
   position: relative;
 }
 
-/* ================= PROFILE CARD ================= */
 
-
-
-/* IMAGE */
-
-.swipe-card img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-}
-
-/* DARK OVERLAY */
-
-.card-overlay {
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  padding: 24px;
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(0,0,0,0.82)
-    );
-
-  color: white;
-}
-
-/* NAME */
-
-.card-name {
-  margin: 0;
-
-  font-size: 32px;
-  font-weight: 700;
-}
-
-/* LOCATION */
-
-.card-location {
-  margin-top: 6px;
-
-  font-size: 15px;
-
-  opacity: 0.9;
-}
-
-/* BIO */
-
-.card-bio {
-  margin-top: 12px;
-
-  font-size: 14px;
-
-  line-height: 1.5;
-
-  opacity: 0.92;
-}
-
-/* INTERESTS */
-
-.interests-row {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 10px;
-
-  margin-top: 14px;
-}
-
-.interest-chip {
-  padding: 8px 14px;
-
-  border-radius: 999px;
-
-  background: rgba(255,255,255,0.18);
-
-  backdrop-filter: blur(10px);
-
-  font-size: 12px;
-}
 
 /* ================= ACTION BUTTONS ================= */
 
@@ -1286,7 +1243,8 @@ textarea::placeholder {
   width: 100%;
   max-width: 420px;
 
-  height: 72vh;
+min-height: 620px;
+height: 72vh;
 
   margin: auto;
 
@@ -1300,6 +1258,10 @@ textarea::placeholder {
     0 20px 50px rgba(0,0,0,0.22);
 
   animation: cardPop 0.35s ease;
+}
+.main-card-wrapper {
+  position: relative;
+  z-index: 5;
 }
 
 @keyframes cardPop {

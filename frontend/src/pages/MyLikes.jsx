@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import BottomNavbar from "../components/BottomNavbar";
-
+import axiosInstance from "../api/axios";
 function MyLikes() {
 
   // ================= STATES =================
@@ -9,23 +9,36 @@ function MyLikes() {
     useState([]);
 
   // ================= LOAD LIKES =================
-  useEffect(() => {
+useEffect(() => {
 
-    const savedLikes =
-      JSON.parse(
-        localStorage.getItem(
-          "myLikes"
-        )
-      ) || [];
+  fetchLikes();
+
+}, []);
+
+const fetchLikes = async () => {
+
+  try {
+
+    const response =
+      await axiosInstance.get(
+        "/Profile/my-likes"
+      );
+
+    const data =
+      response?.data || [];
+
+    setLikedUsers(data);
+
+  } catch (err) {
 
     console.log(
-      "💖 MY LIKES:",
-      savedLikes
+      "❌ Fetch likes error:",
+      err
     );
 
-    setLikedUsers(savedLikes);
-
-  }, []);
+    setLikedUsers([]);
+  }
+};
 
   return (
 
@@ -81,15 +94,24 @@ function MyLikes() {
               >
 
                 {/* PROFILE IMAGE */}
-                <img
-                  className="liked-img"
-                  src={
-                    user.photoUrl ||
-                    user.photoPreview ||
-                    "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                  }
-                  alt="profile"
-                />
+      {user.photoUrl ? (
+
+<img
+  className="liked-img"
+  src={user.photoUrl}
+  alt="profile"
+  onError={(e) => {
+    e.target.style.display = "none";
+  }}
+/>
+
+) : (
+
+  <div className="liked-empty">
+    No Photo
+  </div>
+
+)}
 
                 {/* INFO */}
                 <div className="liked-info">

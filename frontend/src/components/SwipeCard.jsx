@@ -1,7 +1,7 @@
 import {
   FaMapMarkerAlt,
   FaHeart,
-  FaMusic,
+
   FaStar,
 
   FaFire,
@@ -12,12 +12,12 @@ import { FaUser } from "react-icons/fa";
 
 
   // ================= DEFAULT IMAGE =================
-  function SwipeCard({ user }) {
+ function SwipeCard({ user }) {
+
+  console.log("SWIPE USER:", user);
 
   console.log("USER IMAGE DATA:", user);
-  const defaultAvatar =
-    "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-
+  
   // ================= SAFE IMAGE =================
 const isValidImage = (url) => {
   if (!url) return false;
@@ -34,7 +34,7 @@ const profileImage =
     ? user.photo
     : isValidImage(user?.profilePhoto)
     ? user.profilePhoto
-    : defaultAvatar;
+    : "";
 
   // ================= SAFE INTERESTS =================
   const interests =
@@ -48,21 +48,29 @@ const profileImage =
     <div className="swipe-card">
 
       {/* ================= IMAGE ================= */}
-      <div className="swipe-image-wrapper">
+ {/* ================= IMAGE ================= */}
+<div className="swipe-image-wrapper">
 
-        <img
-          src={profileImage}
-          alt="profile"
-          className="swipe-img"
-          onError={(e) => {
-            e.target.src = defaultAvatar;
-          }}
-        />
+  {profileImage ? (
 
-        {/* DARK OVERLAY */}
-        <div className="overlay"></div>
+    <img
+      src={profileImage}
+      alt="profile"
+      className="swipe-img"
+    />
 
-      </div>
+  ) : (
+
+    <div className="no-image-placeholder">
+   {user?.name?.charAt(0)?.toUpperCase()}
+    </div>
+
+  )}
+
+  {/* DARK OVERLAY */}
+  <div className="overlay"></div>
+
+</div>
 
       {/* ================= TOP BADGES ================= */}
       <div className="card-top-badges">

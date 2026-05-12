@@ -48,9 +48,7 @@ function ProfileSetup() {
   const [showPhotoViewer, setShowPhotoViewer] =
     useState(false);
 
-  // ================= DEFAULT AVATAR =================
-  const defaultAvatar =
-    "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+  
 
   // ================= LOAD PROFILE =================
   useEffect(() => {
@@ -238,21 +236,24 @@ if (response.photoUrl) {
   };
 
   // ================= PHOTO HANDLE =================
-  const handlePhoto = (e) => {
+const handlePhoto = (e) => {
 
-    const file =
-      e.target.files[0];
+  const file = e.target.files[0];
 
-    if (!file) return;
+  if (!file) return;
 
-    setPhoto(file);
+  setPhoto(file);
 
-    // ================= PREVIEW =================
-    const imageUrl =
-      URL.createObjectURL(file);
+  const reader = new FileReader();
 
-    setPhotoPreview(imageUrl);
+  reader.onloadend = () => {
+
+    setPhotoPreview(reader.result);
+
   };
+
+  reader.readAsDataURL(file);
+};
 
   // ================= PHOTO ACTIONS =================
   const handleViewPhoto = () => {
@@ -475,18 +476,22 @@ if (response.photoUrl) {
                 }
               >
 
-                <img
-                  src={
-                    photoPreview ||
-                    defaultAvatar
-                  }
-                  alt="profile"
-                  className="profile-preview-img"
-                />
+                {photoPreview ? (
 
-                <div className="plus-badge">
-                  +
-                </div>
+  <img
+    src={photoPreview}
+    alt="profile"
+    className="profile-preview-img"
+  />
+
+) : (
+
+  <div className="empty-photo">
+    +
+  </div>
+
+)}
+               
 
                 <input
                   type="file"

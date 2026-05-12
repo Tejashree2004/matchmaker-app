@@ -269,20 +269,31 @@ namespace backend.Controllers
                 }
 
                 // ================= SAVE SWIPE =================
-                var swipe = new Swipe
-                {
-                    UserId = currentUser.Id,
+              
+var existingSwipe =
+    _context.Swipes.FirstOrDefault(x =>
+        x.UserId == currentUser.Id
+        &&
+        x.LikedUserId == dto.LikedUserId
+    );
 
-                    LikedUserId = dto.LikedUserId,
+if (existingSwipe == null)
+{
+    var swipe = new Swipe
+    {
+        UserId = currentUser.Id,
 
-                    IsLike = dto.IsLike,
+        LikedUserId = dto.LikedUserId,
 
-                    CreatedAt = DateTime.UtcNow
-                };
+        IsLike = dto.IsLike,
 
-                _context.Swipes.Add(swipe);
+        CreatedAt = DateTime.UtcNow
+    };
 
-                _context.SaveChanges();
+    _context.Swipes.Add(swipe);
+
+    _context.SaveChanges();
+}
 
                 // ================= CHECK MATCH =================
                 bool isMatch = false;
