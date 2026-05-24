@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 
 import BottomNavbar from "../components/BottomNavbar";
+import axiosInstance from "../api/axios";
 
 function MyLikes() {
 
@@ -23,29 +24,55 @@ function MyLikes() {
   }, []);
 
   // ================= GET LIKES =================
-  const fetchLikes = () => {
+const fetchLikes = async () => {
 
-    try {
+  try {
 
-      const savedLikes =
-        JSON.parse(
-          localStorage.getItem(
-            "myLikes"
-          )
-        ) || [];
-
-      setLikedUsers(savedLikes);
-
-    } catch (err) {
-
-      console.log(
-        "❌ Likes error:",
-        err
+    const res =
+      await axiosInstance.get(
+        "/Profile/my-likes"
       );
 
-      setLikedUsers([]);
-    }
-  };
+    setLikedUsers(res || []);
+
+  } catch (err) {
+
+    console.log(
+      "❌ Likes error:",
+      err
+    );
+
+    setLikedUsers([]);
+  }
+};
+// ================= REMOVE LIKE =================
+const removeLike = async (likedUserId) => {
+
+  try {
+
+    await axiosInstance.post(
+      "/Profile/swipe",
+      {
+        likedUserId: likedUserId,
+        isLike: false
+      }
+    );
+
+    // UI se remove karo
+    setLikedUsers((prev) =>
+      prev.filter(
+        (u) => u.id !== likedUserId
+      )
+    );
+
+  } catch (err) {
+
+    console.log(
+      "❌ Remove like error:",
+      err
+    );
+  }
+};
 
   return (
 
@@ -69,7 +96,7 @@ function MyLikes() {
       </div>
 
       {/* ================= EMPTY ================= */}
-      {likedUsers.length === 0 ? (
+      {!likedUsers || likedUsers.length === 0 ? (
 
         <div className="empty-wrapper">
 
@@ -92,12 +119,12 @@ function MyLikes() {
         /* ================= LIKES LIST ================= */
         <div className="likes-list">
 
-          {likedUsers.map(
+          {likedUsers?.map(
             (user, index) => (
 
               <div
                 className="liked-card"
-                key={user.id || index}
+              key={`${user.id}-${index}`}
               >
 
                 {/* ================= IMAGE ================= */}
@@ -141,11 +168,16 @@ function MyLikes() {
 
                     </h2>
 
-                    <div className="liked-heart">
+                 <div
+  className="liked-heart"
+  onClick={() =>
+    removeLike(user.id)
+  }
+>
 
-                      <FaHeart />
+  <FaHeart />
 
-                    </div>
+</div>
 
                   </div>
 

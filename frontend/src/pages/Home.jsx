@@ -93,49 +93,37 @@ console.log(
 
     }
   };
-const handleSwipe = async (isLike, swipedUser) => {
+const handleSwipe = async (
+  isLike,
+  swipedUser
+) => {
+
   if (!swipedUser) return;
 
-  const selectedUser = swipedUser;
-
-  const loggedInUserId = localStorage.getItem("userId");
-  const storageKey = `myLikes_${loggedInUserId}`;
-
-  console.log("LIKING USER:", selectedUser);
-  console.log("STORAGE KEY:", storageKey);
-
   try {
-    await axiosInstance.post("/Profile/swipe", {
-  likedUserId: selectedUser.id,
-  isLike: isLike
-});
-  } catch (err) {
-    console.log("Swipe error", err);
-  }
 
-  // SAVE ONLY IF LIKE
-  if (isLike) {
-    const existing =
-      JSON.parse(localStorage.getItem(storageKey)) || [];
-
-    const alreadyExists = existing.some(
-      (u) => u.id === selectedUser.id
+    await axiosInstance.post(
+      "/Profile/swipe",
+      {
+        likedUserId: swipedUser.id,
+        isLike: isLike
+      }
     );
 
-    if (!alreadyExists) {
-      existing.push(selectedUser);
+    // remove card from UI
+    setUsers((prev) =>
+      prev.filter(
+        (u) => u.id !== swipedUser.id
+      )
+    );
 
-      localStorage.setItem(
-        storageKey,
-        JSON.stringify(existing)
-      );
-    }
+  } catch (err) {
+
+    console.log(
+      "Swipe error",
+      err
+    );
   }
-
-  // REMOVE FROM LIST
-  setUsers((prev) =>
-    prev.filter((u) => u.id !== selectedUser.id)
-  );
 };
 
 

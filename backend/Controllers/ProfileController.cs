@@ -277,8 +277,14 @@ var existingSwipe =
         x.LikedUserId == dto.LikedUserId
     );
 
-if (existingSwipe == null)
+if (existingSwipe != null)
 {
+    // already swipe hai toh update karo
+    existingSwipe.IsLike = dto.IsLike;
+}
+else
+{
+    // new swipe save karo
     var swipe = new Swipe
     {
         UserId = currentUser.Id,
@@ -291,9 +297,9 @@ if (existingSwipe == null)
     };
 
     _context.Swipes.Add(swipe);
-
-    _context.SaveChanges();
 }
+
+_context.SaveChanges();
 
                 // ================= CHECK MATCH =================
                 bool isMatch = false;
@@ -333,61 +339,71 @@ if (existingSwipe == null)
         // =========================================================
         // WHO I LIKED
         // =========================================================
-        [HttpGet("my-likes")]
-        public IActionResult GetMyLikes()
+       [HttpGet("my-likes")]
+public IActionResult GetMyLikes()
+{
+    try
+    {
+        var email = GetUserEmail();
+
+        if (string.IsNullOrEmpty(email))
         {
-            try
-            {
-                var email = GetUserEmail();
-
-                if (string.IsNullOrEmpty(email))
-                {
-                    return BadRequest("Invalid token");
-                }
-
-                var currentUser =
-                    _context.Users.FirstOrDefault(
-                        x => x.Email == email
-                    );
-
-                if (currentUser == null)
-                {
-                    return NotFound("User not found");
-                }
-
-                var likedUsers =
-                    _context.Swipes
-                    .Where(x =>
-                        x.UserId == currentUser.Id
-                        &&
-                        x.IsLike == true
-                    )
-                    .Join(
-                        _context.Users,
-                        swipe => swipe.LikedUserId,
-                        user => user.Id,
-                        (swipe, user) => new
-                        {
-                            id = user.Id,
-                            name = user.Name,
-                            age = user.Age,
-                            location = user.Location,
-                            photoUrl = user.PhotoUrl,
-                            bio = user.Bio
-                        }
-                    )
-                    .ToList();
-
-                return Ok(likedUsers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    ex.Message
-                );
-            }
+            return BadRequest("Invalid token");
         }
+
+        var currentUser =
+            _context.Users.FirstOrDefault(
+                x => x.Email == email
+            );
+
+        if (currentUser == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // ================= GET UNIQUE LIKED USER IDS =================
+
+        var likedUserIds =
+            _context.Swipes
+            .Where(x =>
+                x.UserId == currentUser.Id
+                &&
+                x.IsLike == true
+            )
+            .Select(x => x.LikedUserId)
+            .Distinct()
+            .ToList();
+
+        // ================= GET USERS =================
+
+        var likedUsers =
+            _context.Users
+            .Where(user =>
+                likedUserIds.Contains(user.Id)
+            )
+            .Select(user => new
+            {
+                id = user.Id,
+                name = user.Name,
+                age = user.Age,
+                location = user.Location,
+                photoUrl = user.PhotoUrl,
+                bio = user.Bio,
+                personality = user.Personality,
+                vibe = user.Vibe
+            })
+            .ToList();
+
+        return Ok(likedUsers);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(
+            500,
+            ex.Message
+        );
+    }
+}
 
         // =========================================================
         // WHO LIKED ME
