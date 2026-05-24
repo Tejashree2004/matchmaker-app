@@ -16,6 +16,7 @@ import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
 
 import ProfileSetup from "./pages/ProfileSetup";
+import ProfileView from "./pages/ProfileView";
 
 // ================= MAIN PAGES =================
 import Home from "./pages/Home";
@@ -133,7 +134,10 @@ function App() {
           path="/settings"
           element={<Settings />}
         />
-
+<Route
+  path="/profile-view"
+  element={<ProfileView />}
+/>
         {/* ================= FALLBACK ================= */}
         <Route
           path="*"

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
 import axiosInstance from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 import BottomNavbar from "../components/BottomNavbar";
 
 function WhoLikedYou() {
-
+const navigate = useNavigate();
   const [users, setUsers] =
     useState([]);
 
@@ -21,7 +22,7 @@ function WhoLikedYou() {
 
       const response =
         await axiosInstance.get(
-          "/Profile/who-liked-you"
+         "/Profile/liked-me"
         );
 
       setUsers(
@@ -76,18 +77,25 @@ function WhoLikedYou() {
           {users.map(
             (user) => (
 
-              <div
-                className="liked-card"
-                key={user.id}
-              >
+             <div
+  className="liked-card"
+  key={user.id}
+  onClick={() =>
+    navigate("/profile-view", {
+      state: { user },
+    })
+  }
+>
 
-                <img
-                  src={
-                    user.photoUrl ||
-                    "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                  }
-                  alt="profile"
-                />
+             <img
+  src={
+    user.photoUrl &&
+    user.photoUrl.trim() !== ""
+      ? user.photoUrl
+      : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+  }
+  alt="profile"
+/>
 
                 <div className="liked-info">
 

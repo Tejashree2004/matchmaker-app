@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import TinderCard from "react-tinder-card";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaHeart,
@@ -17,8 +19,7 @@ function Home() {
   const [users, setUsers] =
     useState([]);
 
-  const [currentIndex, setCurrentIndex] =
-    useState(0);
+const navigate = useNavigate();
 
   const [loading, setLoading] =
     useState(true);
@@ -48,20 +49,34 @@ console.log(
   response
 );
 
-const loggedInUserId =
-  Number(
-    localStorage.getItem("userId")
-  );
+const loggedInUserId = localStorage.getItem("userId");
+
+console.log(
+  "LOGGED USER ID:",
+  loggedInUserId
+);
+const allUsers = Array.isArray(response)
+  ? response
+  : [];
+console.log(
+  "ALL USERS:",
+  allUsers
+);
 
 const filteredUsers =
-  Array.isArray(response)
-    ? response.filter(
-        (u) =>
-          u.id !== loggedInUserId
-      )
-    : [];
+  allUsers.filter(
+    (u) =>
+     String(u.id) !== String(loggedInUserId)
+  );
+  setUsers(filteredUsers);
 
-setUsers(filteredUsers);
+console.log(
+  "FILTERED USERS:",
+  filteredUsers
+);
+
+
+
 
     } catch (err) {
 
@@ -78,89 +93,53 @@ setUsers(filteredUsers);
 
     }
   };
+const handleSwipe = async (isLike, swipedUser) => {
+  if (!swipedUser) return;
 
-  // ================= HANDLE SWIPE =================
-  const handleSwipe = async (
-    isLike
-  ) => {
+  const selectedUser = swipedUser;
 
-    const selectedUser =
-      users[currentIndex];
+  const loggedInUserId = localStorage.getItem("userId");
+  const storageKey = `myLikes_${loggedInUserId}`;
 
-    if (!selectedUser) return;
+  console.log("LIKING USER:", selectedUser);
+  console.log("STORAGE KEY:", storageKey);
 
-    // ================= SAVE TO BACKEND =================
-    try {
+  try {
+    await axiosInstance.post("/Profile/swipe", {
+  likedUserId: selectedUser.id,
+  isLike: isLike
+});
+  } catch (err) {
+    console.log("Swipe error", err);
+  }
 
-     await axiosInstance.post(
-  "/Profile/swipe",
-        {
-          likedUserId:
-            selectedUser.id,
+  // SAVE ONLY IF LIKE
+  if (isLike) {
+    const existing =
+      JSON.parse(localStorage.getItem(storageKey)) || [];
 
-          isLike,
-        }
-      );
+    const alreadyExists = existing.some(
+      (u) => u.id === selectedUser.id
+    );
 
-    } catch (err) {
+    if (!alreadyExists) {
+      existing.push(selectedUser);
 
-      console.log(
-        "❌ Swipe API Error:",
-        err
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify(existing)
       );
     }
-
-    // ================= SAVE LIKES =================
-   if (isLike) {
-
-  const existingLikes =
-    JSON.parse(
-      localStorage.getItem(
-        "myLikes"
-      )
-    ) || [];
-
-  const alreadyLiked =
-    existingLikes.some(
-      (item) =>
-        item.id ===
-        selectedUser.id
-    );
-
-  if (!alreadyLiked) {
-
-    existingLikes.push({
-
-      id: selectedUser.id,
-
-      name: selectedUser.name,
-
-      age: selectedUser.age,
-
-      location:
-        selectedUser.location,
-
-      bio: selectedUser.bio,
-
-      photoUrl:
-        selectedUser.photoUrl,
-
-    });
-
-    localStorage.setItem(
-      "myLikes",
-      JSON.stringify(
-        existingLikes
-      )
-    );
   }
-}
 
-    // ================= NEXT PROFILE =================
-    setCurrentIndex(
-      (prev) => prev + 1
-    );
-  };
+  // REMOVE FROM LIST
+  setUsers((prev) =>
+    prev.filter((u) => u.id !== selectedUser.id)
+  );
+};
+
+
+  
 
   // ================= LOADING =================
   if (loading) {
@@ -188,8 +167,7 @@ setUsers(filteredUsers);
   // ================= EMPTY STATE =================
  if (
   !users ||
-  users.length === 0 ||
-currentIndex >= users.length
+  users.length === 0 
 ) {
 
     return (
@@ -243,7 +221,9 @@ currentIndex >= users.length
 // ================= CURRENT USER =================
 
 const currentUser =
-  users[currentIndex] || null;
+  users.length > 0
+    ? users[0]
+    : null;
 
 console.log(
   "CURRENT USER:",
@@ -251,6 +231,7 @@ console.log(
 );
 
 return (
+  
 
     <div className="home-container">
 
@@ -276,47 +257,88 @@ return (
  {/* ================= CARD ================= */}
 <div className="scroll-profiles-container">
 
-  {users.map((user) => (
+{currentUser ? (
 
-    <div
-      key={user.id}
-      className="scroll-profile"
+    <TinderCard
+      key={currentUser.id}
+      preventSwipe={["up", "down"]}
+      onSwipe={(dir) => {
+
+        if (dir === "right") {
+
+       handleSwipe(
+  true,
+  currentUser
+);
+
+        } else if (dir === "left") {
+
+        handleSwipe(
+  false,
+  currentUser
+);
+
+        }
+
+      }}
     >
 
-      <SwipeCard user={user} />
+   <div
+  className="scroll-profile"
+  onClick={() =>
+    navigate("/profile-view", {
+      state: { user: currentUser },
+    })
+  }
+>
 
-      {/* ================= ACTIONS ================= */}
-      <div className="swipe-actions">
+        <SwipeCard
+          user={currentUser}
+        />
 
-        {/* DISLIKE */}
-        <button
-          className="swipe-btn dislike-btn"
-          onClick={() =>
-            handleSwipe(false)
-          }
-        >
+        <div className="swipe-actions">
 
-          <FaTimes />
+          {/* DISLIKE */}
+          <button
+            className="swipe-btn dislike-btn"
+           onClick={(e) => {
+  e.stopPropagation(); // ✅ IMPORTANT
+  handleSwipe(false, currentUser);
+}}
+          >
 
-        </button>
+            <FaTimes />
 
-        {/* LIKE */}
-        <button
-          className="swipe-btn like-btn"
-          onClick={() =>
-            handleSwipe(true)
-          }
-        >
+          </button>
 
-          <FaHeart />
+          {/* LIKE */}
+          <button
+            className="swipe-btn like-btn"
+            onClick={(e) => {
+  e.stopPropagation();
+  handleSwipe(true, currentUser);
+}}
+          >
 
-        </button>
+            <FaHeart />
+
+          </button>
+
+        </div>
 
       </div>
 
-    </div>
+    </TinderCard>
 
-  ))}
+) : (
+
+  <div className="empty-wrapper">
+
+    <h2>No Profile Found 💔</h2>
+
+  </div>
+
+)} 
 
 </div>
 
@@ -334,4 +356,4 @@ return (
 );
 }
 
-export default Home;
+export default Home; 
