@@ -405,63 +405,73 @@ public IActionResult GetMyLikes()
     }
 }
 
-        // =========================================================
-        // WHO LIKED ME
-        // =========================================================
-        [HttpGet("liked-me")]
-        public IActionResult GetLikedMe()
+  // =========================================================
+// WHO LIKED ME
+// =========================================================
+[HttpGet("liked-me")]
+public IActionResult GetLikedMe()
+{
+    try
+    {
+        var email = GetUserEmail();
+
+        if (string.IsNullOrEmpty(email))
         {
-            try
-            {
-                var email = GetUserEmail();
-
-                if (string.IsNullOrEmpty(email))
-                {
-                    return BadRequest("Invalid token");
-                }
-
-                var currentUser =
-                    _context.Users.FirstOrDefault(
-                        x => x.Email == email
-                    );
-
-                if (currentUser == null)
-                {
-                    return NotFound("User not found");
-                }
-
-                var likedMe =
-                    _context.Swipes
-                    .Where(x =>
-                        x.LikedUserId == currentUser.Id
-                        &&
-                        x.IsLike == true
-                    )
-                    .Join(
-                        _context.Users,
-                        swipe => swipe.UserId,
-                        user => user.Id,
-                        (swipe, user) => new
-                        {
-                            id = user.Id,
-                            name = user.Name,
-                            age = user.Age,
-                            location = user.Location,
-                            photoUrl = user.PhotoUrl,
-                            bio = user.Bio
-                        }
-                    )
-                    .ToList();
-
-                return Ok(likedMe);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(
-                    500,
-                    ex.Message
-                );
-            }
+            return BadRequest("Invalid token");
         }
+
+        var currentUser =
+            _context.Users.FirstOrDefault(
+                x => x.Email == email
+            );
+
+        if (currentUser == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // ================= USER IDS WHO LIKED ME =================
+
+        var userIds =
+            _context.Swipes
+            .Where(x =>
+                x.LikedUserId == currentUser.Id
+                &&
+                x.IsLike == true
+            )
+            .Select(x => x.UserId)
+            .Distinct()
+            .ToList();
+
+        // ================= GET USERS =================
+
+        var likedMeUsers =
+            _context.Users
+            .Where(x =>
+                userIds.Contains(x.Id)
+            )
+            .Select(user => new
+            {
+                id = user.Id,
+                name = user.Name,
+                age = user.Age,
+                location = user.Location,
+                photoUrl = user.PhotoUrl,
+                bio = user.Bio,
+                personality = user.Personality,
+                vibe = user.Vibe
+            })
+            .ToList();
+
+        return Ok(likedMeUsers);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(
+            500,
+            ex.Message
+        );
+    }
+}
     }
 }

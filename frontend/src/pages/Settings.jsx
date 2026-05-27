@@ -101,7 +101,7 @@ function Settings() {
       title: "Who Liked You",
       sub: "People interested in you",
       action: () =>
-        navigate("/liked-you"),
+  navigate("/who-liked-you"),
     },
 
     {

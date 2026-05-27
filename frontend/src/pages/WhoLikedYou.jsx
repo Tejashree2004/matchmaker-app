@@ -1,45 +1,99 @@
 import { useEffect, useState } from "react";
 
+import {
+  FaMapMarkerAlt,
+  FaHeart,
+  FaFire,
+  FaUser,
+} from "react-icons/fa";
+
 import axiosInstance from "../api/axios";
+
 import { useNavigate } from "react-router-dom";
 
 import BottomNavbar from "../components/BottomNavbar";
 
 function WhoLikedYou() {
-const navigate = useNavigate();
+
+  const navigate = useNavigate();
+
+  // ================= STATES =================
   const [users, setUsers] =
     useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
+  // ================= FETCH =================
   useEffect(() => {
 
-    fetchLikes();
+    fetchLikedUsers();
 
   }, []);
 
-  const fetchLikes = async () => {
+  // ================= API =================
+  const fetchLikedUsers = async () => {
 
     try {
 
+      setLoading(true);
+
       const response =
         await axiosInstance.get(
-         "/Profile/liked-me"
+          "/Profile/liked-me"
         );
 
-      setUsers(
-        response.data || []
+      console.log(
+        "LIKED ME:",
+        response.data
       );
+
+     setUsers(response || []);
 
     } catch (err) {
 
-      console.log(err);
+      console.log(
+        "Liked Me Error:",
+        err
+      );
+
+      setUsers([]);
+
+    } finally {
+
+      setLoading(false);
 
     }
   };
+
+  // ================= LOADING =================
+  if (loading) {
+
+    return (
+
+      <div className="home-container">
+
+        <div className="loading-screen">
+
+          <div className="loader-heart">
+            💘
+          </div>
+
+          <h2>
+            Loading likes...
+          </h2>
+
+        </div>
+
+      </div>
+    );
+  }
 
   return (
 
     <div className="home-container">
 
+      {/* ================= HEADER ================= */}
       <div className="home-header">
 
         <div>
@@ -56,6 +110,7 @@ const navigate = useNavigate();
 
       </div>
 
+      {/* ================= EMPTY ================= */}
       {users.length === 0 ? (
 
         <div className="empty-wrapper">
@@ -68,43 +123,127 @@ const navigate = useNavigate();
             No Likes Yet
           </h2>
 
+          <p>
+            Nobody liked your profile yet.
+          </p>
+
         </div>
 
       ) : (
 
-        <div className="likes-grid">
+        /* ================= LIST ================= */
+        <div className="likes-list">
 
           {users.map(
-            (user) => (
+            (user, index) => (
 
-             <div
-  className="liked-card"
-  key={user.id}
-  onClick={() =>
-    navigate("/profile-view", {
-      state: { user },
-    })
-  }
->
+              <div
+                className="liked-card"
+                key={`${user.id}-${index}`}
+                onClick={() =>
+                  navigate("/profile-view", {
+                    state: { user },
+                  })
+                }
+              >
 
-             <img
-  src={
-    user.photoUrl &&
-    user.photoUrl.trim() !== ""
-      ? user.photoUrl
-      : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-  }
-  alt="profile"
-/>
+                {/* ================= IMAGE ================= */}
+                <div className="liked-image-wrapper">
 
-                <div className="liked-info">
+                  {user.photoUrl ? (
 
-                  <h3>
-                    {user.name}
-                  </h3>
+                    <img
+                      src={user.photoUrl}
+                      alt="profile"
+                      className="liked-img"
+                    />
 
-                  <p>
-                    {user.location}
+                  ) : (
+
+                    <div className="liked-empty">
+
+                      {user?.name
+                        ?.charAt(0)
+                        ?.toUpperCase() || "U"}
+
+                    </div>
+
+                  )}
+
+                  <div className="liked-overlay"></div>
+
+                </div>
+
+                {/* ================= CONTENT ================= */}
+                <div className="liked-content">
+
+                  {/* NAME */}
+                  <div className="liked-name-row">
+
+                    <h2>
+
+                      {user.name || "Unknown"},
+                      {" "}
+                      {user.age || "18"}
+
+                    </h2>
+
+                    <div className="liked-heart">
+
+                      <FaHeart />
+
+                    </div>
+
+                  </div>
+
+                  {/* LOCATION */}
+                  <div className="liked-location">
+
+                    <FaMapMarkerAlt />
+
+                    <span>
+
+                      {user.location || "Unknown"}
+
+                    </span>
+
+                  </div>
+
+                  {/* PERSONALITY */}
+                  <div className="liked-personality">
+
+                    <FaUser />
+
+                    <span>
+
+                      {user.personality ||
+                        "Fun Loving"}
+
+                    </span>
+
+                  </div>
+
+                  {/* VIBE */}
+                  {user.vibe && (
+
+                    <div className="liked-vibe">
+
+                      <FaFire />
+
+                      <span>
+                        {user.vibe}
+                      </span>
+
+                    </div>
+
+                  )}
+
+                  {/* BIO */}
+                  <p className="liked-bio">
+
+                    {user.bio ||
+                      "Looking for genuine vibes ✨"}
+
                   </p>
 
                 </div>
@@ -116,6 +255,14 @@ const navigate = useNavigate();
         </div>
       )}
 
+      {/* ================= SPACE ================= */}
+      <div
+        style={{
+          height: "100px",
+        }}
+      />
+
+      {/* ================= NAVBAR ================= */}
       <BottomNavbar />
 
     </div>

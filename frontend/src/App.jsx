@@ -32,26 +32,28 @@ import Chat from "./pages/Chat";
 import Settings from "./pages/Settings";
 
 // ================= COMPONENTS =================
-import BottomNavbar from "./components/BottomNavbar";
+
 
 function App() {
 
   const location = useLocation();
 
   // ================= HIDE NAVBAR =================
-  const hideNavbar =
+const hideNavbar =
 
-    location.pathname === "/" ||
+  location.pathname === "/" ||
 
-    location.pathname.includes("login") ||
+  location.pathname.includes("login") ||
 
-    location.pathname.includes("signup") ||
+  location.pathname.includes("signup") ||
 
-    location.pathname.includes("verify") ||
+  location.pathname.includes("verify") ||
 
-    location.pathname.includes("onboarding") ||
+  location.pathname.includes("onboarding") ||
 
-    location.pathname.includes("profile-setup");
+  location.pathname.includes("profile-setup") ||
+
+  location.pathname.includes("profile-view");
 
   return (
 
@@ -151,10 +153,7 @@ function App() {
 
       </Routes>
 
-      {/* ================= NAVBAR ================= */}
-      {!hideNavbar && (
-        <BottomNavbar />
-      )}
+    
 
     </div>
   );
