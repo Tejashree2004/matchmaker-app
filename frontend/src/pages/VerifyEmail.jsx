@@ -3,12 +3,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { verifyEmailOtp } from "../api/api";
+import { FaTimes } from "react-icons/fa";
 
 function VerifyEmail() {
   const nav = useNavigate();
   const location = useLocation();
 
   const [otp, setOtp] = useState("");
+  const [showPopup, setShowPopup] =
+  useState(false);
+
+const [popupAction, setPopupAction] =
+  useState("");
   const email = location.state?.email;
 
   if (!email) {
@@ -26,8 +32,8 @@ function VerifyEmail() {
     try {
       await verifyEmailOtp({ email, otp });
 
-      alert("Email verified 🎉");
-      nav("/login");
+     setShowPopup(true);
+setPopupAction("");
 
     } catch (err) {
       console.log(err);
@@ -59,6 +65,89 @@ function VerifyEmail() {
         </div>
 
       </div>
+      {/* ================= EMAIL VERIFIED POPUP ================= */}
+{showPopup && (
+
+  <div
+    className="popup-backdrop"
+    onClick={() => {
+
+      setShowPopup(false);
+
+      // ================= YES ACTION =================
+      if (popupAction === "yes") {
+
+        nav("/login");
+
+      }
+
+    }}
+  >
+
+    <div
+      className="success-popup"
+      onClick={(e) =>
+        e.stopPropagation()
+      }
+    >
+
+      {/* CLOSE ICON */}
+      <div
+        className="popup-close"
+        onClick={() => {
+
+          setShowPopup(false);
+
+          // ================= YES ACTION =================
+          if (popupAction === "yes") {
+
+            nav("/login");
+
+          }
+
+        }}
+      >
+        <FaTimes />
+      </div>
+
+      <h2>
+        Email Verified 🎉
+      </h2>
+
+      <p>
+        Do you want to continue
+        to Login?
+      </p>
+
+      <div className="popup-buttons">
+
+        {/* YES BUTTON */}
+        <button
+          className="yes-btn"
+          onClick={() =>
+            setPopupAction("yes")
+          }
+        >
+          Yes
+        </button>
+
+        {/* NO BUTTON */}
+        <button
+          className="no-btn"
+          onClick={() =>
+            setPopupAction("no")
+          }
+        >
+          No
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { FaTimes } from "react-icons/fa";
 
 import {
   saveProfile,
@@ -48,6 +49,11 @@ function ProfileSetup() {
   const [showPhotoViewer, setShowPhotoViewer] =
     useState(false);
 
+    const [showSuccessPopup, setShowSuccessPopup] =
+  useState(false);
+
+  const [popupAction, setPopupAction] =
+  useState("");
   
 
   // ================= LOAD PROFILE =================
@@ -403,12 +409,8 @@ const handlePhoto = (e) => {
         )
       );
 
-      alert(
-        response?.message ||
-          "Profile saved successfully 💖"
-      );
-
-      nav("/home");
+  setShowSuccessPopup(true);
+setPopupAction("");
 
     } catch (err) {
 
@@ -873,7 +875,88 @@ const handlePhoto = (e) => {
 
           </div>
         )}
+{/* ================= SUCCESS POPUP ================= */}
+{showSuccessPopup && (
 
+  <div
+    className="popup-backdrop"
+    onClick={() => {
+
+      setShowSuccessPopup(false);
+
+      // ================= YES ACTION =================
+      if (popupAction === "yes") {
+
+        nav("/home");
+
+      }
+
+    }}
+  >
+
+    <div
+      className="success-popup"
+      onClick={(e) =>
+        e.stopPropagation()
+      }
+    >
+
+      {/* CLOSE ICON */}
+      <div
+        className="popup-close"
+        onClick={() => {
+
+          setShowSuccessPopup(false);
+
+          // ================= YES ACTION =================
+          if (popupAction === "yes") {
+
+            nav("/home");
+
+          }
+
+        }}
+      >
+        <FaTimes />
+      </div>
+
+      <h2>
+        Profile Saved Successfully 💖
+      </h2>
+
+      <p>
+        Do you want to continue?
+      </p>
+
+      <div className="popup-buttons">
+
+        {/* YES BUTTON */}
+        <button
+          className="yes-btn"
+          onClick={() =>
+            setPopupAction("yes")
+          }
+        >
+          Yes
+        </button>
+
+        {/* NO BUTTON */}
+        <button
+          className="no-btn"
+          onClick={() =>
+            setPopupAction("no")
+          }
+        >
+          No
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
     </div>
   );
 }

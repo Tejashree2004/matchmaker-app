@@ -168,7 +168,7 @@ const handleSwipe = async (
           <div>
 
             <h1 className="app-logo">
-              SoulSync 💖
+              MatchMaker 💖
             </h1>
 
             <p className="home-subtitle">
@@ -229,7 +229,7 @@ return (
         <div>
 
           <h1 className="app-logo">
-            SoulSync 💖
+           MatchMaker 💖
           </h1>
 
           <p className="home-subtitle">
