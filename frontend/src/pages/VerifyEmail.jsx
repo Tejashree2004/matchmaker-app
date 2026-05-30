@@ -15,6 +15,8 @@ function VerifyEmail() {
 
 const [popupAction, setPopupAction] =
   useState("");
+  const [popupMessage, setPopupMessage] =
+  useState("");
   const email = location.state?.email;
 
   if (!email) {
@@ -25,20 +27,35 @@ const [popupAction, setPopupAction] =
   const handleVerify = async (e) => {
     e.preventDefault();
 
-    if (!otp) {
-      return alert("Please enter OTP");
-    }
+  if (!otp) {
+
+  setShowPopup(true);
+
+  setPopupAction("");
+
+  return;
+}
 
     try {
       await verifyEmailOtp({ email, otp });
 
-     setShowPopup(true);
+setPopupMessage(
+  "Email Verified 🎉"
+);
+
 setPopupAction("");
 
-    } catch (err) {
-      console.log(err);
-      alert(err?.response?.data || "Invalid OTP");
-    }
+setShowPopup(true);
+
+    }catch (err) {
+
+  console.log(err);
+
+  setShowPopup(true);
+
+  setPopupAction("");
+
+}
   };
 
   return (
@@ -110,14 +127,20 @@ setPopupAction("");
         <FaTimes />
       </div>
 
-      <h2>
-        Email Verified 🎉
-      </h2>
+   <h2>
+  {popupMessage}
+</h2>
 
       <p>
-        Do you want to continue
-        to Login?
-      </p>
+
+  {popupMessage ===
+  "Email Verified 🎉"
+
+    ? "Do you want to continue to Login?"
+
+    : "Please check and try again."}
+
+</p>
 
       <div className="popup-buttons">
 
