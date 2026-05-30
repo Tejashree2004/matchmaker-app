@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { signupUser } from "../api/api";
+import { FaTimes } from "react-icons/fa";
 
 function Signup() {
   const nav = useNavigate();
@@ -10,7 +11,14 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+const [showPopup, setShowPopup] =
+  useState(false);
 
+const [popupMessage, setPopupMessage] =
+  useState("");
+
+const [popupAction, setPopupAction] =
+  useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -19,15 +27,39 @@ function Signup() {
 
     // ✅ basic validation
     if (!email || !password) {
-      return alert("Email and Password required");
+      setPopupMessage(
+  "Email and Password required"
+);
+
+setPopupAction("");
+
+setShowPopup(true);
+
+return;
     }
 
     if (password !== confirmPassword) {
-      return alert("Passwords do not match 💔");
+      setPopupMessage(
+  "Passwords do not match 💔"
+);
+
+setPopupAction("");
+
+setShowPopup(true);
+
+return;
     }
 
     if (password.length < 6) {
-      return alert("Password must be at least 6 characters");
+setPopupMessage(
+  "Password must be at least 6 characters"
+);
+
+setPopupAction("");
+
+setShowPopup(true);
+
+return;
     }
 
     console.log("🚀 PAYLOAD:", { email, password });
@@ -40,11 +72,15 @@ nav("/verify-email", { state: { email } });
     } catch (err) {
       console.log("❌ FULL ERROR:", err);
 
-      alert(
-        err?.message ||
-        err?.response?.data ||
-        "Signup failed"
-      );
+    setPopupMessage(
+  err?.message ||
+  err?.response?.data ||
+  "Signup failed"
+);
+
+setPopupAction("");
+
+setShowPopup(true);
     }
   };
 
@@ -109,6 +145,98 @@ nav("/verify-email", { state: { email } });
         </p>
 
       </div>
+      {/* ================= SIGNUP POPUP ================= */}
+{showPopup && (
+
+  <div
+    className="popup-backdrop"
+    onClick={() => {
+
+      setShowPopup(false);
+
+      if (
+        popupAction === "success"
+      ) {
+
+        nav(
+          "/verify-email",
+          {
+            state: { email }
+          }
+        );
+
+      }
+
+    }}
+  >
+
+    <div
+      className="success-popup"
+      onClick={(e) =>
+        e.stopPropagation()
+      }
+    >
+
+      <div
+        className="popup-close"
+        onClick={() => {
+
+          setShowPopup(false);
+
+          if (
+            popupAction ===
+            "success"
+          ) {
+
+            nav(
+              "/verify-email",
+              {
+                state: { email }
+              }
+            );
+
+          }
+
+        }}
+      >
+        <FaTimes />
+      </div>
+
+      <h2>
+        {popupMessage}
+      </h2>
+
+      <p>
+        Do you want to continue?
+      </p>
+
+      <div className="popup-buttons">
+
+        <button
+          className="yes-btn"
+          onClick={() =>
+            setPopupAction("yes")
+          }
+        >
+          Yes
+        </button>
+
+        <button
+          className="no-btn"
+          onClick={() =>
+            setPopupAction("no")
+          }
+        >
+          No
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
     </div>
   );
 }
